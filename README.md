@@ -28,6 +28,29 @@ The author controls the content, design, commercial rules, and which fields reci
 
 These are static, AI-generated design explorations, not functioning screens. Apple, Starbucks, and McDonald's are fictional recipients used to demonstrate theme flexibility. They are not customers, partners, or endorsers. All programme descriptions and prices are invented examples.
 
+### Main dashboard — Apple-layout direction
+
+The preferred OSIRIS layout carries the Apple concept's monochrome shell into the personal workspace: a dark navigation rail, white panels, clear typography, and a single prominent creation action. Resume a draft, review a new client response, or manage published links from the same dashboard.
+
+![OSIRIS main dashboard concept](concepts/osiris-dashboard.png)
+
+The sample dashboard contains three drafts, two published proposals, and one new response. These are fictional records. A response is a client request, not an accepted contract.
+
+### From creating a proposal to sharing it
+
+**Create → Customise → Configure → Preview → Publish and copy → Client view.**
+
+![OSIRIS create-to-share storyboard](concepts/osiris-create-to-share.png)
+
+1. Choose a template and enter the client and proposal name.
+2. Edit the content, sections, and style in the Apple-inspired editor.
+3. Define recipient-editable choices and connect them to author-controlled prices.
+4. Preview the recipient experience and verify layout, inputs, and totals.
+5. Publish a fixed revision, set access and expiry, then copy its link to share yourself.
+6. The client opens a clean proposal, explores scope, and reviews a selection before requesting confirmation.
+
+Publishing or copying a link does not send a message. The storyboard's `osiris.example` address is an illustrative placeholder, not a live application. [Detailed dashboard and flow specification](devplan.md#dashboard-and-create-to-share-concepts).
+
 ### Apple — author style builder
 
 Minimal typography, monochrome imagery, and a live proposal preview beside theme controls.
@@ -51,7 +74,7 @@ The detailed plan takes precedence over incidental UI or typography differences 
 ## Planning documents
 
 - [Development and design plan](devplan.md): reference investigation, user journeys, MVP scope, field permissions, calculation specification, architecture, acceptance criteria, roadmap, and startup validation.
-- [Concept generation prompts](devplan.md#appendix-concept-generation-prompts): the exact prompt set used with the built-in Imagegen tool.
+- [Concept generation prompts](devplan.md#appendix-concept-generation-prompts): the exact prompt sets used with the built-in Imagegen tool, including the dashboard and create-to-share storyboard.
 
 ## Recommended first release
 

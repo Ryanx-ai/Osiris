@@ -4,7 +4,7 @@
 
 **Purpose:** a purpose-built interactive proposal builder for small teams and companies, beginning with personal usage.
 
-This document specifies a possible future implementation. It does not authorise development. The present deliverables are this plan, the README, and three static concept visuals. No executable prototype, application scaffold, dependency installation, infrastructure, or deployment is included.
+This document specifies a possible future implementation. It does not authorise development. The present deliverables are this plan, the README, and five static concept visuals: three brand examples, the main dashboard, and a create-to-share storyboard. No executable prototype, application scaffold, dependency installation, infrastructure, or deployment is included.
 
 ## 1. Product direction
 
@@ -153,6 +153,68 @@ Recipient: `baseline → exploring → ready for review → submitting → reque
 Each published link is bound to a revision. Republishing does not silently change what an existing recipient is reviewing. A new link is issued for the new revision; the author can revoke the old one. If a withdrawn revision receives a late submission, show the appropriate update/contact route rather than silently substituting prices.
 
 ## 5. Design plan
+
+### Dashboard and create-to-share concepts
+
+**Design direction selected on 18 November 2026:** use the original Apple OSIRIS concept's layout as the reference for the main application and author journey. This selects the monochrome shell, circular O mark, dark rail, white panels, system-sans typography, generous spacing, and restrained black buttons. Apple remains a fictional recipient; the workspace belongs to the author, not Apple.
+
+![Main OSIRIS dashboard](concepts/osiris-dashboard.png)
+
+#### Dashboard structure and behaviour
+
+| Area | Content | Intended action |
+| --- | --- | --- |
+| Global header | OSIRIS, personal workspace, search, profile | Identify the workspace; find a proposal or account settings |
+| Workspace navigation | Overview, All proposals, Templates, Brand kits, Responses | Move between creation, reusable resources, and received requests |
+| Primary action | Create proposal | Open template selection and basic proposal details |
+| Status summary | Drafts, published proposals, new responses | Filter the corresponding list; avoid invented revenue or conversion metrics |
+| Continue editing | Most recently edited draft with cover and context | Resume the saved draft at its last useful position |
+| Needs your attention | An unread submitted client selection | Open the response detail and its baseline comparison |
+| Proposal list | Name, client, status, last update, contextual action | Edit draft, manage published link, or inspect response |
+| Row overflow | Duplicate, rename, archive as permitted | Keep secondary actions out of the main visual hierarchy |
+
+The concept shows five fictional proposals: three drafts and two published proposals. One published proposal has a new response. A new response is an additional signal, not a replacement publication status. Do not mark a proposal as sent merely because its link was copied, or as accepted merely because a recipient opened it.
+
+For summary counts, classify an active proposal with a published revision as Published even when it has newer unpublished edits; show a separate “Unpublished changes” indicator. Classify proposals that have never been published as Draft. Exclude archived proposals from the default totals. “New responses” counts unread submissions and is independent of the proposal counts. Marking a response read changes the unread count but does not change its commercial state.
+
+First-use state: replace the counters and recent-draft panel with “Create your first proposal” and a clearly labelled optional sample. No-response state: remove the attention panel or show a quiet explanatory message. Search-empty state: retain filters and offer “Clear filters”. Failed loading must show a retry option rather than a misleading zero count.
+
+On mobile, replace the full navigation with a labelled menu, stack the resume/attention panels, and turn table rows into compact list items. Keep Create proposal reachable. This responsive design is specified but not visually rendered in the current dashboard image.
+
+![Create-to-share storyboard](concepts/osiris-create-to-share.png)
+
+#### Six-screen author-to-client flow
+
+| Step | Screen and main action | What must be true before continuing |
+| --- | --- | --- |
+| 01 Create | Choose Training proposal or Blank proposal; enter client and proposal name; Create draft | Required names present; create an independently identified draft, with no public link |
+| 02 Customise | Edit narrative, sections, and style in the three-pane editor | Autosave succeeds or clearly preserves a recoverable local draft |
+| 03 Configure | Define fields, editability, bounds, rates, and pricing bindings | Default values valid; dependencies resolve; locked rates remain author-only |
+| 04 Preview | View the proposal as a recipient, including device previews and adjustable fields | Preview scenario is isolated from authored defaults; price and required-field checks pass |
+| 05 Publish and share | Confirm publishing settings, publish Version 1, then copy the generated link | Server confirms a saved immutable revision and valid link before showing success |
+| 06 Client view | Open the shared link, explore scope, review selection, request confirmation | Only published recipient content loads; no author navigation or draft data is exposed |
+
+The storyboard depicts step 05 **after successful publication**. The preceding publish checklist still needs a dedicated design: show the selected revision content, missing-field/price warnings, currency and tax treatment, access mode, expiry, and an explicit Publish proposal action. Invalid configuration or failed save keeps the proposal unpublished and preserves the draft. No success link should appear until the publish transaction succeeds.
+
+The fictional Apple example uses 24 participants at S$300 plus a S$1,200 programme-design fee, totalling S$8,400 before tax. Its editable participant range is 10–60. A change to 30 participants would produce S$10,200 before tax. The figures illustrate scope exploration; actual publishing must obey the tax/final-estimate rules in section 7, or explicitly operate as a request for quotation with tax still to be determined.
+
+#### Sharing and client handoff
+
+- Publishing creates a fixed revision; copying a link is a separate action. Neither sends a message or creates a client response.
+- The sample access choice is “Anyone with the link”, with a visible expiry. Explain that this link can be forwarded. Verified-recipient access remains a separate decision for confidential use.
+- The visual's `osiris.example/p/apple-v1` is a reserved-domain mock URL. A real implementation uses an unpredictable token, not a guessable client name.
+- After copying, show “Link copied” only when clipboard writing succeeds. If blocked, retain a selectable URL and manual-copy guidance.
+- “Open client view” opens the published version, while author preview may contain unsaved scenario exploration. Keep the distinction explicit.
+- Closing and reopening the share dialog preserves link settings. Expiry changes and revocation affect access, never rewrite the revision's commercial content.
+- A revoked or expired link opens an explanatory page with an appropriate contact route. Issuing a new link does not reactivate an old revoked token.
+- In the actual client view, remove the OSIRIS editor rail, inspectors, draft status, and publishing controls. Keep the client identity, scope, estimate, review CTA, and contact route.
+- “Review my selection” leads to a review screen; only an explicit subsequent request action stores the response. The resulting receipt appears in the author's Responses area and attention panel.
+
+#### Design review and remaining work
+
+Both new raster concepts were visually reviewed for consistency with the Apple layout, readable primary actions, consistent sample totals, and separation of editor and client surfaces. The dashboard counts match its five sample rows. The storyboard shows all six steps and clearly indicates that copying a link does not send it.
+
+These are static concept screens, not a tested interface. Before implementation, refine small-screen navigation, remove redundant navigation where the rail and sidebar overlap, design the pre-publication checklist, and design error, empty, clipboard-failure, expired-link, client review, and receipt states. Avoid interpreting the miniaturised storyboard as final pixel or accessibility specifications.
 
 ### OSIRIS identity and layout
 
@@ -424,11 +486,39 @@ Decisions to revisit before building: preferred initial theme; first real propos
 
 ## 13. Planning handoff
 
-Delivered now: README, this design/development plan, and the three raster concept screens. The Git repository contains planning materials only. A future instruction to develop should first confirm or amend the MVP boundaries, then implement the vertical slice in section 9.
+Delivered now: README, this design/development plan, three brand concept screens, a main dashboard concept, and a six-screen create-to-share storyboard. The Git repository contains planning materials only. A future instruction to develop should first confirm or amend the MVP boundaries, then implement the vertical slice in section 9.
 
 Image generation used the built-in Imagegen tool. The exact prompt set follows for reproducibility. The images have been visually reviewed as concepts; form behaviour, responsive behaviour, calculation logic, and accessibility have not been implemented or tested.
 
 ## Appendix: concept generation prompts
+
+### Main dashboard
+
+Reference image: `concepts/osiris-apple.png`. Generated with the built-in Imagegen tool on 18 November 2026.
+
+```text
+Use case: ui-mockup. Create one polished high-fidelity OSIRIS MAIN DASHBOARD desktop screenshot. Use the attached Apple OSIRIS editor image as the exact visual-language reference, not as content to repeat. Preserve its white circular O mark in narrow charcoal left rail, black OSIRIS wordmark, warm light gray workspace, white panels, fine gray borders, clean system sans typography, soft 10px corners, black primary buttons, and generous whitespace. Landscape 16:10, large readable typography, straight-on flat screenshot, no physical device or perspective.
+This is Ryan's personal proposal workspace, NOT Apple's company dashboard. Apple is a fictional proposal recipient. Top header 'OSIRIS' then divider and 'Personal workspace', right search icon and avatar 'R'. Left charcoal 64px rail with O mark, selected home icon, document icon, folder icon, settings at bottom. White 205px sidebar heading 'Workspace', selected 'Overview', 'All proposals', 'Templates', 'Brand kits', 'Responses' small badge 1; bottom 'Ryan' and 'Personal workspace'.
+Main content title 'Your proposals, in motion.' supporting 'Pick up a draft or prepare your next client conversation.' top right prominent black '+ Create proposal'. Three elegant compact counters in one single white strip: '3 Drafts', '2 Published', '1 New response'. Avoid financial analytics, graphs, invented revenue, or acceptance metrics.
+Below a spacious split row: left 2/3 wide continue card with small monochrome glass retail interior thumbnail matching reference, eyebrow 'CONTINUE EDITING', title 'Apple / Retail team enablement', small 'Draft · Edited today', text '24 participants · 3 workshops · 6 weeks', button 'Continue editing →'. Right 1/3 compact card 'Needs your attention', line 'McDonald’s / Crew confidence', detail 'A client selection is ready to review.', button 'Review response', subtle tag '1 new response'.
+Below title 'All proposals', slim tabs 'All 5' selected, 'Drafts 3', 'Published 2', search input 'Find a proposal'. A meticulously aligned table with columns 'Proposal', 'Client', 'Status', 'Updated', 'Action'. Exactly five rows: 'Retail team enablement' | 'Apple' | 'Draft' | 'Today' | 'Edit'; 'Store team programme' | 'Starbucks' | 'Published' | 'Yesterday' | 'Manage link'; 'Crew confidence' | 'McDonald’s' | 'Published' plus small 'New response' | 'Yesterday' | 'View response'; 'Service workshop' | 'Sample client A' | 'Draft' | '16 Nov' | 'Edit'; 'Leadership programme' | 'Sample client B' | 'Draft' | '15 Nov' | 'Edit'. Muted neutral status pills, no bright color. Each row trailing three-dot menu.
+Small footer 'OSIRIS / DASHBOARD CONCEPT' and 'Fictional sample data · No working application'. Use OSIRIS brand only in the shell, no Apple logo as the OSIRIS logo. This is a product design concept, not a marketing page. Large beautiful clear typography, precise spacing, consistent icon style.
+```
+
+### Create-to-share storyboard
+
+Reference image: `concepts/osiris-apple.png`. Generated with the built-in Imagegen tool on 18 November 2026.
+
+```text
+Use case: ui-mockup. Create a high-resolution premium product storyboard showing SIX coherent OSIRIS screens from creating a proposal to client sharing. Use attached Apple OSIRIS image as visual-language reference: circular white O in charcoal rail, white OSIRIS header, system sans typography, gray workspace, white panels, black buttons, thin borders, restrained radii. Flat front-view design board, landscape 3:2 at high resolution, no devices or perspective. Six spacious screen panels in exactly 3 columns and 2 rows, numbered left to right top row 01-03 then bottom row 04-06. Generous gutters, crisp readable text. Main title 'OSIRIS / From draft to client' subtitle 'One proposal. A clear path to sharing.' Tiny 'STATIC DESIGN CONCEPT · FICTIONAL APPLE EXAMPLE'. Each panel contains a realistic simplified app screen, not a conceptual icon or paragraph, and its step label above. Keep each miniature UI sparse enough to read; hierarchy matters more than dense text.
+01 'Create a proposal': neutral OSIRIS header; title 'Start with a template'; two mini template cards 'Training proposal' selected and 'Blank proposal'; labeled fields 'Client' value 'Apple', 'Proposal name' value 'Retail team enablement'; primary black 'Create draft'.
+02 'Make it yours': realistic three-pane editor miniature matching reference closely. Left sections 'Overview', 'Scope', 'Investment', 'Contact'. Center small 'PREPARED FOR Apple', strong black headline 'Great teams. Extraordinary experiences.', wide monochrome glass interior photo. Right narrow style inspector title 'Style', black gray white swatches and 'System sans'. Toolbar 'Draft' and 'Preview'. Tiny caption below screen 'Edit content, sections and style.'
+03 'Set choices and pricing': field panel and estimate beside it. Field 'Participants', value 24, toggle 'Client can edit' on, limits 'Min 10' 'Max 60'; locked 'Unit price S$300'. Line 'Programme design S$1,200'. Estimate 'S$8,400 before tax'. Small 'Illustrative pricing'. Black 'Preview proposal'. Author-only rates visually locked.
+04 'Preview as your client': toolbar 'Client preview' plus desktop/mobile icons, small secondary 'Back to editor'. Apple-branded proposal summary, compact 'Participants 24' editable stepper, 'Delivery In person' choice, readable 'S$8,400 before tax', primary 'Review my selection'. Beneath screen caption 'Check layout, editable fields and totals.' This is preview only; not published.
+05 'Publish, then share': white sharing dialog within subdued OSIRIS shell. Heading 'Your link is ready'. status 'Published · Version 1'. 'Access' value 'Anyone with the link', 'Expires' value '18 Dec 2026'. Copy field 'osiris.example/p/apple-v1' with black 'Copy link' button. Below text 'Copying a link does not send it.' secondary 'Open client view' and subtle 'Revoke link'. Small caption 'Publish creates a fixed version. Share the link yourself.' URL is a fictional reserved example domain, no actual external service.
+06 'Your client opens it': entirely clean client proposal, NO author rail, no edit controls, no publish toolbar. Tiny 'Prepared for Apple' with Apple mark; headline 'Great teams. Extraordinary experiences.' narrow monochrome interior image; stepper 'Participants 24', estimate 'S$8,400 before tax', small 'Scenario · not submitted', button 'Review my selection', secondary 'Contact Ryan'. Beneath caption 'Explore scope, review the estimate, request confirmation.' Add tiny fictional example label.
+At very bottom one simple text sequence with slim arrow symbols: 'Create → Customise → Configure → Preview → Publish & copy → Client view'. No decorative charts, no fake sent email notification, no contract signed state. Figures consistent: 24 × S$300 + S$1,200 = S$8,400 before tax. Match the attached reference throughout.
+```
 
 ### Apple
 
