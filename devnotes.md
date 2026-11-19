@@ -1,5 +1,27 @@
 # OSIRIS developer notes
 
+## Core product principle — founder direction, 19 November 2026
+
+**OSIRIS turns a shared proposal or presentation into an interactive decision tool. The client can change relevant variables to explore what fits their own needs.** Client interaction is central to the product and must guide the rebuild, template system, editor and shared experience.
+
+The intended journey is: author creates a proposal → previews the client experience → shares a link → client adjusts available inputs → sees the impact on the proposal → communicates a preferred scenario. The last step is a design requirement; do not imply that client choices already sync back to the author.
+
+### Implications for the rebuild
+
+- Authors define which variables clients can edit, their labels, defaults, units, valid ranges and dependencies. Keep author-only content and commercial rules separate from recipient inputs.
+- Clients should easily discover what they can change and see how those changes affect relevant totals, charts, recommendations and proposal content. Show clear calculation/loading/error states; never leave outdated results looking current.
+- Preserve the published proposal as the baseline. Client exploration creates a scenario without silently changing the author's draft or another visitor's choices. Provide a clear reset to the original proposal.
+- Use one typed variable and calculation model across canvas content, inspector fields, calculators, forms and gizmos. Author preview must expose the same inputs and rules as the shared client view.
+- Design save/resume, scenario comparison and “send my preferred configuration” as explicit future capabilities, with defined persistence and submission confirmation. Distinguish exploring a scenario from accepting a proposal.
+- Exports should clearly identify the chosen scenario and assumptions. Test that supported PDF outputs match the displayed values; preserve a useful static fallback for interactive components.
+- Keep recipient interaction usable on mobile and by keyboard, with labelled controls, input validation and understandable feedback. Retain the current client-facing visual design during the author UI rebuild.
+
+### Existing foundation and acceptance direction
+
+Source review confirms the current client calculator already provides editable inputs, recalculation, entity selection, reset-to-baseline logic and plan-code save/load (`prototype/src/embedded/calculator/calc-app.js`). These are reference behaviours to preserve and generalise. This entry records a source review, not a new live interaction test. Shared-page browser storage remains limited by the sandbox; plan codes do not constitute cloud persistence or author notification.
+
+For each rebuilt interactive template, verify a complete client task: change an allowed input → obtain correct, consistent results → recover from invalid input → reset to baseline → export the supported scenario. Separately verify that recipient changes cannot modify author-only variables or the published baseline. Future analytics should help authors understand client needs and scenario choices, with explicit handling of anonymous visitors and submitted responses.
+
 ## Auth and sharing — 19 November 2026
 
 Current request: remove the Google Sites/website CTA, simplify to create → preview → share, and restrict author access to Ryan and Izzat. The prototype structure and core renderer are preserved.
@@ -167,3 +189,7 @@ Founder supplied Group 1.svg (full lockup) and Group 2.svg (mark), plus a black-
 
 ### Header hierarchy refinement — 19 November 2026
 Moved the full outlined OSIRIS SVG to the top-left account row at 128px wide (112px on small screens). The main heading is now “Vertical Institute – Client proposal microsite” in larger UI type, below the brand row. Removed the redundant VI badge. Login and client deck layout are unchanged.
+
+### Transparent logo finish — 19 November 2026
+
+Removed the builder logo wrapper's black background, padding and rounded corners. The exact supplied full SVG now sits directly on the workspace background. Header hierarchy commit `0e6f230` and transparency commit `6dc67a4` were pushed to GitHub and deployed to production. The public build passed; the live authenticated builder was visually checked, with the logo confirmed as SVG at 128px wide and its wrapper confirmed transparent with no border. Final deployment: `dpl_77Hz58duAxMRoWYUsY52fJxbA1iu` (READY), serving `www.osirisdeck.com`.
