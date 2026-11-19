@@ -163,3 +163,7 @@ Founder timing: rebuild starts **20 November 2026 (Asia/Singapore)**. Today’s 
 
 ## Approved logo integration — 19 November 2026
 Founder supplied Group 1.svg (full lockup) and Group 2.svg (mark), plus a black-background reference. Original paths preserved; exact mark colours are white, cyan #00FFE1 and orange #FF5100. Orange remains mark-only. Wordmark delivered as outlines; font identity is unspecified. Generated 36 SVG/PNG/ICO assets, source/hash manifest and a downloadable brand kit. Updated sign-in and author header logos, favicon source and public ICO/touch icon build outputs; new recipient exports inherit the new favicon. Existing immutable shared snapshots are preserved. Refreshed local concept, brand-book logo guidance and workspace-structure page. Figma placement explicitly deferred until connector access returns. Existing 13 tests and public build pass.
+
+
+### Header hierarchy refinement — 19 November 2026
+Moved the full outlined OSIRIS SVG to the top-left account row at 128px wide (112px on small screens). The main heading is now “Vertical Institute – Client proposal microsite” in larger UI type, below the brand row. Removed the redundant VI badge. Login and client deck layout are unchanged.
