@@ -14,7 +14,7 @@ Izzat reported that Share link intermittently failed and recovered after refresh
 1. Code and fault tests: founder allowlist; primary-email verification; slug and payload limits; immutable publish ownership; concurrent creation; lost-response idempotency; client token refresh; bounded retries; conflict rejection; non-JSON server failures; assembled scripts parse.
 2. Isolated browser flow: preview open/close; full-window fallback and exit; slide navigation; calculator render; required survey fields and preview-only submission; share creation; anonymous client route under production-equivalent sandbox; tour dismissal; enrolment and contact tabs. No messages sent to clients.
 3. Export files: PDF header verified; PPTX and XLSX are valid ZIP containers. PDF 568,751 bytes; PPTX 7,786,131 bytes; enrolment workbook 78,943 bytes.
-4. Live release: recorded after deployment in devnotes.
+4. Live release: commit `10a566a`, Vercel `dpl_7qbvzPUhzNQYXfAFndmCkqWghU8o` READY. Signed-in founder publish succeeded. Both custom and Vercel domains returned 200 for the shared fixture with sandbox headers; apex redirects preserved its route. Unauthenticated editor access returned 401 and private-builder access 404. The QA fixture was deleted, then both recipient URLs returned 404. Runtime error scan returned no records. Native fullscreen was declined in the controlled browser; the 1440×844 full-window fallback was verified.
 
 ## Boundaries
 - AI notes depend on a Claude artifact capability and remain hidden on Vercel. A real authenticated AI backend belongs in the next phase; manual notes work today.

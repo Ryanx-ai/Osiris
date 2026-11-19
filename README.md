@@ -49,3 +49,6 @@ See [developer notes](devnotes.md), [development plan](devplan.md), and [prototy
 
 ### Reliability update
 Preview now includes **Full screen**. Sharing refreshes authentication and retries temporary failures without reloading your draft. Existing shared URLs retain their published version. See [release checks](docs/RELEASE-AUDIT-2026-11-19.md).
+
+### Author workspace redesign
+The [rebuild plan](docs/OSIRIS-REBUILD-PLAN.md) includes research, stack choices and phased acceptance criteria. Review the [interactive author concept](design/index.html), [ten-page brand book](design/brand-book.html) and [handoff notes](design/README.md). These are next-phase design artifacts; production still uses the current author app. Figma population is pending connector quota availability.
