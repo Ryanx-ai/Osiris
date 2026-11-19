@@ -8,7 +8,7 @@ Current request: remove the Google Sites/website CTA, simplify to create → pre
 
 - Clerk email-code sign-in, production instance in invite-only mode. Two existing founder identities are provisioned as reserved/unverified; they must verify their own email during sign-in. No public sign-up flow or Google OAuth yet.
 - Every editor/publish request verifies a bearer session, active session status and the verified primary email against `ryanchinqf2@gmail.com` / `mohamedizzatamin@gmail.com`. Origin checks protect writes. UI checks are convenience only. Secrets remain server-side.
-- Public build output contains the login shell. The full builder lives in `.private/builder.html` and is included only with the guarded editor function. Public builds still exclude client seed data.
+- Public build output contains the login shell. The guarded editor function bundles `src/` and `assets/` and assembles its HTML after authorization. `.private/builder.html` is a local build artifact only. Public builds still exclude client seed data.
 - Preview uses an isolated recipient iframe with form submission disabled. Share publishes an immutable HTML snapshot to private Vercel Blob in Singapore (`sin1`), using Vercel OIDC rather than a browser storage token.
 - Client URL: `/vertical-institute/project-name`. The custom domain redirects apex to www. Production Vercel aliases serve the same client routes; their editor entry links to canonical www sign-in.
 - Slug creation is atomic, refuses overwrite, and supports identical retry by the same author. Revisions use a new slug, e.g. `-v2`. No client content is committed to GitHub.
@@ -88,3 +88,7 @@ Run `cd prototype && npm test && npm run build:public`. Verify browser initializ
 - Private Blob roundtrip and atomic overwrite rejection pass. A fictional sample publication returned 200 with isolated HTML on both custom and Vercel hostnames; apex redirects preserve the client path. The sample was removed and both URLs returned 404 afterward. No client proposal or message was sent.
 - All five Clerk CNAMEs verified. Production frontend HTTPS returns 200, email-code first factor is enabled, registration mode is `restricted`. Founder email-code sign-in is awaiting the user's end-to-end check; no verification codes were accessed by the agent.
 - Production runtime error scan after smoke checks returned no error records. No engagement analytics or monitoring drain was added. The temporary Vercel automation bypass created for preview testing was revoked; zero bypasses remain.
+
+### Authenticated editor loading fix — 19 November 2026
+
+The first real founder sign-in exposed a 503 while loading the editor, despite the unauthenticated security checks passing. The editor now assembles HTML from bundled source/assets using module-relative paths, instead of depending on a generated `.private/builder.html` file and the runtime working directory. Build and runtime use one assembler; production never loads local seed drafts. Added safe stage/error-code diagnostics and a Retry button for workspace-loading failures. A regression test reproduces a function bundle with no generated HTML and a different working directory. All nine tests pass.

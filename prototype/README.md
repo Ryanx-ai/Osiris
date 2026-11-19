@@ -13,12 +13,12 @@ See the [root README](../README.md) for sign-in, environment and Vercel setup. U
 - `src/js/engine.js`, `templates.js`, `runtime.js`, `content.js`: unchanged core rendering, fees, calculations and export pipeline.
 - `src/embedded/`: recipient deck player, calculator, survey/enrol/contact microsite, and optional Apps Script survey endpoint.
 - `assets/`: embedded fonts and images.
-- `api/editor.js`: verifies an active Clerk session and approved, verified primary email before returning the builder.
+- `api/editor.js`: verifies an active Clerk session and approved, verified primary email before assembling the builder from bundled source/assets.
 - `api/publish.js`: authenticated, same-origin publication. Atomic create prevents overwriting another proposal or a previously shared version.
 - `api/publication.js`: reads a private Blob snapshot for `/vertical-institute/:slug`; unknown pages return 404.
-- `lib/`: server-side access rules and authentication.
-- `scripts/build.mjs`: expands `@@file:…@@`, `@@b64:…@@`, `@@seeds@@`. Public builds always omit real seed drafts. Writes the sign-in shell to `dist/index.html` and server-only builder to `.private/builder.html`.
-- `vercel.json`: functions, private builder inclusion, client route rewrite and response headers.
+- `lib/`: server-side access rules, authentication and a shared document assembler.
+- `scripts/build.mjs`: expands `@@file:…@@`, `@@b64:…@@`, `@@seeds@@`. Public builds always omit real seed drafts. Writes the sign-in shell to `dist/index.html` and a local verification artifact to `.private/builder.html`. The deployed editor does not depend on this generated file.
+- `vercel.json`: functions, server-only source/asset inclusion, client route rewrite and response headers.
 
 The full builder is mounted in an authenticated shell iframe to preserve the prototype runtime. Recipient HTML is served with a CSP sandbox that cannot access the author's cookies or localStorage. Its scripts, forms, popups and downloads remain available. Recipient progress is not persisted in localStorage inside this isolated page; calculator plan-code export/import still works.
 

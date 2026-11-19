@@ -39,7 +39,7 @@ Use Clerk's **development** instance for local login; provision approved test id
 
 GitHub: [Ryanx-ai/Osiris](https://github.com/Ryanx-ai/Osiris), production branch `main`. Vercel: project `osiris`, team `pangea6`, root `prototype`, Node 22, install `npm ci`, build `node scripts/build.mjs --public`, output `dist` plus `api/` functions.
 
-Clerk supplies `CLERK_SECRET_KEY` and `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` through the Vercel integration. Vercel Blob uses `BLOB_STORE_ID` and deployment OIDC. No storage token is sent to the browser. Production builds exclude local seed drafts. `dist/index.html` is a sign-in shell; the builder is bundled only into the protected editor function.
+Clerk supplies `CLERK_SECRET_KEY` and `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` through the Vercel integration. Vercel Blob uses `BLOB_STORE_ID` and deployment OIDC. No storage token is sent to the browser. Production builds exclude local seed drafts. `dist/index.html` is a sign-in shell; builder source and assets are bundled only into the protected editor function, which assembles the HTML after authorization.
 
 ## Next phases
 

@@ -4,13 +4,13 @@ const $ = id => document.getElementById(id);
 const approved = new Set(['ryanchinqf2@gmail.com', 'mohamedizzatamin@gmail.com']);
 let signIn, loadingEditor = false, loadedSession = null;
 const message = text => { $('auth-status').textContent = text; };
-function clearEditor() { document.getElementById('editor')?.remove(); delete window.OsirisAuth; loadedSession = null; $('login').hidden = false; }
+function clearEditor() { document.getElementById('editor')?.remove(); delete window.OsirisAuth; loadedSession = null; $('login').hidden = false; $('retry-editor').hidden = true; }
 async function loadEditor() {
   if (loadingEditor || !window.Clerk.session || loadedSession === window.Clerk.session.id) return;
   loadingEditor = true;
   const session = window.Clerk.session;
   try {
-    message('Opening your workspace…');
+    $('retry-editor').hidden = true; message('Opening your workspace…');
     const token = await session.getToken();
     const response = await fetch('/api/editor', {headers:{Authorization:'Bearer ' + token}, cache:'no-store'});
     const data = await response.json();
@@ -21,7 +21,7 @@ async function loadEditor() {
     frame.id = 'editor'; frame.title = 'OSIRIS proposal builder'; frame.srcdoc = data.html;
     document.getElementById('editor')?.remove(); document.body.append(frame);
     loadedSession = session.id; $('login').hidden = true;
-  } catch (error) { message(error.message); $('sign-out').hidden = false; }
+  } catch (error) { message(error.message); $('sign-out').hidden = false; $('retry-editor').hidden = false; }
   finally { loadingEditor = false; }
 }
 $('email-form').addEventListener('submit', async event => {
@@ -50,6 +50,7 @@ $('code-form').addEventListener('submit', async event => {
   finally { $('verify-code').disabled = false; }
 });
 $('start-over').addEventListener('click', () => { signIn = null; $('code-form').hidden = true; $('email-form').hidden = false; message('Enter your email to request a new code.'); $('email').focus(); });
+$('retry-editor').addEventListener('click', loadEditor);
 $('sign-out').addEventListener('click', () => window.Clerk.signOut());
 (async () => {
   try {
