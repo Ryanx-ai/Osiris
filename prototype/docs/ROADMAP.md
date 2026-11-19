@@ -2,6 +2,10 @@
 
 > Scope: how this prototype feeds the OSIRIS product. The product plan of record (MVP scope, journeys, pricing spec, Next.js + Supabase architecture) is [`../../devplan.md`](../../devplan.md); current priorities and scope updates are in [`../../devnotes.md`](../../devnotes.md), which take precedence over older proposals.
 
+## Current implementation update
+
+Founder-only Clerk email sign-in and in-app sharing are implemented without a framework migration. Publications live in private Vercel Blob; drafts remain browser-local per founder. Google OAuth, cloud projects, analytics, the new UI and collaborators remain future phases. Earlier no-auth/static-hosting concerns below describe the imported baseline. See developer notes for current boundaries.
+
 ## Decisions (19 Nov 2026)
 
 1. **Ownership and direction.** Osiris is Ryan and Izzat's project, built to speed up his consulting work, with value beyond Vertical Institute (VI). VI-specific material (logo, course icons, photos, course content, fees, enrolment template) becomes one tenant/template pack, not part of the core product.

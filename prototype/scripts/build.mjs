@@ -10,10 +10,9 @@
  *   @@b64:<path>@@    replaced with the file's bytes as base64 (images, fonts)
  *   @@seeds@@         replaced with data/seed-drafts.local.js, or nothing for a public build
  *
- * Zero dependencies, so it runs anywhere Node 18+ runs, including Vercel's build image.
+ * The builder is server-only; dist contains the public sign-in shell.
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
-import { copyPublishedDecks } from './published.mjs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -38,8 +37,8 @@ if (/@@(file|b64):|@@seeds@@/.test(html)) throw new Error('Unexpanded marker lef
 // Rebuild from scratch so withdrawn publications cannot survive locally.
 rmSync(join(ROOT, 'dist'), { recursive: true, force: true });
 mkdirSync(join(ROOT, 'dist'), { recursive: true });
-writeFileSync(join(ROOT, 'dist/index.html'), html);
-const published = copyPublishedDecks(join(ROOT, 'published'), join(ROOT, 'dist'));
-console.log(`Published client pages: ${published}`);
+mkdirSync(join(ROOT, '.private'), { recursive: true });
+writeFileSync(join(ROOT, '.private/builder.html'), html);
+writeFileSync(join(ROOT, 'dist/index.html'), expand(text('src/login.html')));
 const sha = createHash('sha256').update(html).digest('hex');
-console.log(`dist/index.html  ${(Buffer.byteLength(html) / 1024 / 1024).toFixed(2)} MB  sha256 ${sha}  ${PUBLIC ? '(public: no client seeds)' : existsSync(SEEDS) ? '(local: with client seeds)' : '(no seeds file)'}`);
+console.log(`.private/builder.html  ${(Buffer.byteLength(html) / 1024 / 1024).toFixed(2)} MB  sha256 ${sha}  ${PUBLIC ? '(public: no client seeds)' : existsSync(SEEDS) ? '(local: with client seeds)' : '(no seeds file)'}`);

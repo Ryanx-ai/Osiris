@@ -2,13 +2,24 @@
   "name": "osiris",
   "version": "0.2.0",
   "private": true,
-  "description": "Osiris: client proposal microsite builder (proposal deck, funding calculator, scoping survey, enrolment and contact in one embeddable page).",
+  "description": "OSIRIS: private proposal builder with interactive client sharing.",
   "type": "module",
-  "engines": { "node": "22.x" },
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "build:public": "node scripts/build.mjs --public",
     "test": "node --test scripts/*.test.mjs",
-    "dev": "node scripts/build.mjs && npx --yes serve dist -l 3000"
+    "dev": "npm run build:public && vercel dev --listen 3000"
+  },
+  "dependencies": {
+    "@clerk/backend": "3.31.1",
+    "@vercel/blob": "2.9.0"
+  },
+  "overrides": {
+    "@vercel/cli-config": {
+      "zod": "4.6.7"
+    }
   }
 }

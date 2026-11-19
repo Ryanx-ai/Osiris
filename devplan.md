@@ -4,7 +4,7 @@
 
 **Purpose:** a purpose-built interactive proposal builder for small teams and companies, beginning with personal usage.
 
-The prototype is now imported under `prototype/`. The current release scope and phased plan are in [devnotes.md](devnotes.md), which takes precedence over older proposals here. Today preserves the prototype structure and deploys it; authentication, analytics, Brand Studio, Deck Builder redesign and the website remain upcoming work. MVP: individual users create projects supporting presentations and proposals. Company workspaces and collaborators follow only after MVP validation. Production domain: `osirisdeck.com`; client routes: `/{organisation}/{project-name}`. Earlier concept artwork was removed; textual design research remains historical input, not an approved new visual direction.
+The prototype is now imported under `prototype/`. The current release scope and phased plan are in [devnotes.md](devnotes.md), which takes precedence over older proposals here. The current release preserves the prototype structure and adds founder-only Clerk email sign-in plus in-app immutable share links. Google OAuth, cloud projects, analytics, Brand Studio, Deck Builder redesign and the website remain upcoming work. Older Next.js/Supabase proposals below are future architecture options, not the deployed stack. MVP: individual users create projects supporting presentations and proposals. Company workspaces and collaborators follow only after MVP validation. Production domain: `osirisdeck.com`; client routes: `/{organisation}/{project-name}`. Earlier concept artwork was removed; textual design research remains historical input, not an approved new visual direction.
 
 ## 1. Product direction
 

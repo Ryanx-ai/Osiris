@@ -12,3 +12,5 @@ data/*.local.json
 node_modules/
 .vercel
 .env*
+
+.private/

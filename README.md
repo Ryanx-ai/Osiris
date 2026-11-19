@@ -1,52 +1,48 @@
 # OSIRIS
 
-Interactive presentations and proposals, from a reusable brand template to a client-facing microsite.
+Create an interactive deck or proposal → Preview → Share link.
 
-**Development baseline · 19 November 2026.** Izzat's working prototype is now in `prototype/`. Its browser runtime, source layout, slide renderer, calculator and export pipeline are preserved. Concept artwork has been removed from the working tree; earlier Git commits retain it.
+The Vertical Institute renderer, calculator, enrolment workbook and PDF/PowerPoint exports remain in `prototype/`. The authoring workspace now requires founder sign-in. Clients view only the version published to their link.
 
-## Run locally
+## Use OSIRIS
 
-Use Node.js 22. No application packages need installing.
+Open [osirisdeck.com](https://osirisdeck.com). Sign in using an emailed verification code. Access is restricted server-side to verified primary emails:
+
+- `ryanchinqf2@gmail.com`
+- `mohamedizzatamin@gmail.com`
+
+Public registration is disabled in Clerk. Google sign-in is a later integration; no passwords or Google OAuth setup are required for this release.
+
+Create or edit a draft, choose **Preview**, then **Share link**. Choose a project name to publish at `https://www.osirisdeck.com/vertical-institute/project-name`. Anyone with the link can view and interact with that version and download a PDF. Links are not secret or recipient-authenticated. Published content is stored in private Vercel Blob, not this public GitHub repository.
+
+Each URL is immutable. Use a new link name (for example `project-name-v2`) for a revision. Existing links keep their original version. Drafts remain browser-local, separated by founder account; they do not sync across computers. **More → Export draft** backs them up. **More → Recover pre-sign-in drafts** copies drafts from the earlier public builder into the current account on the same browser/origin.
+
+The [Vercel alias](https://osiris-pangea6.vercel.app) serves client links too. Its authoring entry points to the canonical `www.osirisdeck.com` sign-in, keeping login and browser drafts on one origin.
+
+## Development
+
+Node 22, npm and an authenticated Vercel CLI are required.
 
 ```sh
 cd prototype
+npm ci
+vercel link --project osiris --scope pangea6
+vercel env pull .env.local
 npm run build:public
-npm run dev
+vercel dev --listen 3000
 npm test
 ```
 
-Open the local server URL, or open `prototype/dist/index.html` directly after building. `build` can include private local seed drafts; `build:public` and Vercel builds exclude them. Drafts are stored in this browser only. Export draft JSON for backup; changing from a Vercel hostname to the custom domain does not transfer browser storage.
+Use Clerk's **development** instance for local login; provision approved test identities there separately. Do not enable public signup or put production secrets into source. `.env*`, `.vercel/`, `.private/`, `node_modules/` and `dist/` are ignored. Opening the build directly from disk is no longer an authenticated app.
 
-## Deploy and share
+## Deployment
 
-- Repository: [Ryanx-ai/Osiris](https://github.com/Ryanx-ai/Osiris), production branch `main`.
-- Live prototype: [osirisdeck.com](https://osirisdeck.com); [Vercel alias](https://osiris-pangea6.vercel.app).
-- Vercel: project `osiris`, team `Pangea` (`pangea6`), Root Directory `prototype`.
-- Build: `node scripts/build.mjs --public`; output: `dist`; framework: Other; Node.js 22.
-- Domain: **osirisdeck.com**, DNS and HTTPS verified; currently redirects to **www.osirisdeck.com**. The production `vercel.app` alias remains available.
-- Client URL shape: `https://osirisdeck.com/vertical-institute/project-name`.
+GitHub: [Ryanx-ai/Osiris](https://github.com/Ryanx-ai/Osiris), production branch `main`. Vercel: project `osiris`, team `pangea6`, root `prototype`, Node 22, install `npm ci`, build `node scripts/build.mjs --public`, output `dist` plus `api/` functions.
 
-The same path works on the production Vercel hostname. [Manual publishing instructions](prototype/published/README.md) explain how to deploy an exported recipient page without changing the builder. Unknown paths return 404; they do not expose the editor. Publishing is currently a reviewed file + Git push, not an in-app button. The public GitHub repository and static published pages must contain only material approved for public access. `noindex` is not access control.
-
-## What works now
-
-The Vertical Institute prototype creates browser-local drafts, interactive decks, calculators, team-scoping pages, enrolment workbooks and contact pages. It exports recipient HTML, PDF and PowerPoint. Survey submission requires a consultant-configured Apps Script service. AI features tied to the original Claude environment are unavailable on ordinary hosting.
-
-There is no OSIRIS login, shared database, admin dashboard or engagement analytics yet. The live builder is a prototype; it does not grant admin privileges or share one user's browser-local drafts with another user.
+Clerk supplies `CLERK_SECRET_KEY` and `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` through the Vercel integration. Vercel Blob uses `BLOB_STORE_ID` and deployment OIDC. No storage token is sent to the browser. Production builds exclude local seed drafts. `dist/index.html` is a sign-in shell; the builder is bundled only into the protected editor function.
 
 ## Next phases
 
-1. Plan authentication and project storage, with verified admin accounts for Ryan and Izzat.
-2. Define OSIRIS branding, UI/UX, website, information architecture and the create-to-share journey.
-3. Build the personal MVP: users create projects; **Brand Studio** manages templates; **Deck Builder** edits variables and content for presentations and proposals.
-4. Add reliable publishing, recipient interaction and printable PDF output, followed by admin and user-facing engagement analytics.
-5. Add company workspaces and collaborators after the personal MVP is proven.
+Cloud draft/project storage; Google sign-in; admin and user-facing analytics; OSIRIS brand, website and UX; Brand Studio templates; Deck Builder variables for presentations and proposals. Company workspaces and collaborators follow personal MVP validation.
 
-## Project documents
-
-- [Developer notes](devnotes.md): current state, decisions, phased work and release record.
-- [Development and design plan](devplan.md): detailed design/architecture proposals, updated scope precedence.
-- [Prototype guide](prototype/README.md) and [architecture](prototype/docs/ARCHITECTURE.md): implementation and known limitations.
-- [Reference client experience](https://sites.google.com/verticalinstitute.com/hebei-jinbiao-corp-training/hebei-jinbiao-construction-materials): target interaction pattern, not OSIRIS production content.
-
-Ryan and Izzat co-develop OSIRIS. Use focused branches and review changes before merging. No framework migration or visual redesign is part of this import.
+See [developer notes](devnotes.md), [development plan](devplan.md), and [prototype guide](prototype/README.md). Partner handoff documents are historical implementation context; current user requests determine scope.

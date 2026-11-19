@@ -167,7 +167,7 @@ function mountFrame(tab, title, doc){
   return f;
 }
 if (CFG.tabs.deck) {
-  if (CFG.lite) $('p-deck').innerHTML = '<div class="deck-off"><div><b>The proposal deck shows here in the client’s microsite.</b>This preview leaves it out so it stays quick. See it under Proposal slides, or press Preview microsite for the whole site.</div></div>';
+  if (CFG.lite) $('p-deck').innerHTML = '<div class="deck-off"><div><b>The proposal deck shows here in the client’s microsite.</b>This preview leaves it out so it stays quick. See it under Proposal slides, or press Preview for the whole site.</div></div>';
   else deckFrame = mountFrame('deck', 'Proposal deck', deckDoc());
 }
 const post = (frame, type) => { try { if (frame && frame.contentWindow) frame.contentWindow.postMessage({viSite: 1, type}, '*'); } catch (e) {} };

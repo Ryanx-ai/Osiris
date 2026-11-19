@@ -1,39 +1,35 @@
 # OSIRIS developer notes
 
-## Current development baseline — 19 November 2026
+## Auth and sharing — 19 November 2026
 
-Ryan's 19 November request is the current scope. Partner handoff documents describe the imported implementation; they do not override that request. The older devplan remains useful design research, with the scope updates here taking precedence.
+Current request: remove the Google Sites/website CTA, simplify to create → preview → share, and restrict author access to Ryan and Izzat. The prototype structure and core renderer are preserved.
 
-- Imported partner commit `3fc3108` from the supplied Git bundle on top of existing `main`, preserving authorship and history. The plain prototype folder matched that commit before edits.
-- Preserved `prototype/src`, assets, embedded recipient apps and core renderer. Removed `concepts/` and stale artwork links. Added root housekeeping ignores.
-- Original transport files are archived locally in ignored `.handoff/`; the code itself is versioned in GitHub. All 60 source files were verified against the imported commit, transport archives were compared, and the Desktop source was deleted after the GitHub push was verified.
-- Public builds omit `seed-drafts.local.js` even if present. Build output is regenerated, including only deliberately published recipient HTML from the two-part MVP publication tree.
-- Vercel project: `osiris`, team `pangea6`, ID `prj_JpLiZV1rOb68yu22ADgh7UkbbtKz`; GitHub `Ryanx-ai/Osiris`, `main`; root `prototype`; static output `dist`; Node 22.
-- Production aliases should be publicly usable. Preview and deployment-specific URLs retain Vercel protection. OSIRIS authentication is a separate future feature.
-- `osirisdeck.com` and `www.osirisdeck.com` now pass Vercel DNS checks and HTTPS. The root redirects to `www`; the Vercel alias remains available.
+### Implemented
 
-## Publishing and routing
+- Clerk email-code sign-in, production instance in invite-only mode. Two existing founder identities are provisioned as reserved/unverified; they must verify their own email during sign-in. No public sign-up flow or Google OAuth yet.
+- Every editor/publish request verifies a bearer session, active session status and the verified primary email against `ryanchinqf2@gmail.com` / `mohamedizzatamin@gmail.com`. Origin checks protect writes. UI checks are convenience only. Secrets remain server-side.
+- Public build output contains the login shell. The full builder lives in `.private/builder.html` and is included only with the guarded editor function. Public builds still exclude client seed data.
+- Preview uses an isolated recipient iframe with form submission disabled. Share publishes an immutable HTML snapshot to private Vercel Blob in Singapore (`sin1`), using Vercel OIDC rather than a browser storage token.
+- Client URL: `/vertical-institute/project-name`. The custom domain redirects apex to www. Production Vercel aliases serve the same client routes; their editor entry links to canonical www sign-in.
+- Slug creation is atomic, refuses overwrite, and supports identical retry by the same author. Revisions use a new slug, e.g. `-v2`. No client content is committed to GitHub.
+- Published HTML uses CSP sandbox without `allow-same-origin`; active recipient content cannot read author cookies/storage. Scripts, forms, popups, PDF/Excel downloads and print dialogs remain allowed. Responses are no-store and noindex.
+- Draft and consultant localStorage keys are scoped to Clerk user ID. Older public drafts remain untouched and can be copied explicitly via More → Recover pre-sign-in drafts.
 
-URL contract: `/{organisation}/{project-name}`. Use lowercase, hyphenated slugs, for example `/vertical-institute/project-name`. Reserve the final slug for a distinct project, allowing multiple proposals for one client. Routes are independent of the hostname.
+### Operational configuration
 
-Today: export recipient HTML from the existing builder, review it, place it at `prototype/published/<organisation>/<project-name>/index.html`, then commit and deploy. The public Git repository is unsuitable for confidential proposals. This manual static path has no passcode, expiry or viewer identity. See the publication README. Unknown routes return 404 instead of the builder.
+Vercel project `osiris`, team `pangea6`, project ID `prj_JpLiZV1rOb68yu22ADgh7UkbbtKz`; GitHub `Ryanx-ai/Osiris`, production `main`, root `prototype`, Node 22, npm ci. Clerk integration `osiris-auth`; private Blob store `osiris-publications` (`store_lp0bAvuYRZn6SPBe`). Environment files and generated output are ignored.
 
-Next: store immutable published revisions and resolve the friendly path to a publication record. Keep stable IDs independent of slugs; enforce uniqueness; provide deliberate republishing, revocation, expiry and optional passcode or verified-recipient access. Friendly slugs are not secrets. Historical revisions need explicit URLs/version identifiers, and removing a static page cannot revoke previously downloaded files or historical deployment URLs.
+Clerk production frontend is `clerk.www.osirisdeck.com`; account portal is `accounts.www.osirisdeck.com`. User configured the five CNAMEs in GoDaddy. Both DNS verification and TLS readiness must pass before production sign-in is considered complete. Development/preview use a separate Clerk development instance; production founder accounts do not automatically appear there.
 
-Use relative links / the current origin for navigation and share links by default. The current Vercel domain configuration redirects `osirisdeck.com` to `www.osirisdeck.com`, preserving the publication path. Browser-local drafts and recipient progress are separate for each origin; export/import JSON during the domain transition.
+### Remaining limits / next auth work
 
-## Phase 1 — authentication and persistence plan
+Drafts do not sync across devices. Public links are accessible to anyone who knows or guesses the path; there is no recipient identity, passcode, expiry, analytics or revocation UI. Operators can withdraw a snapshot through private Blob storage; downloaded copies remain. Sandboxed recipient pages do not retain localStorage progress; plan-code downloads still work. Google OAuth, cloud projects and richer session UX are future work.
 
-Initial admin allowlist:
+Clerk is on its free Hobby plan. Its paid provider-level email allowlist was not enabled; invite-only mode plus the mandatory server-side founder gate enforce access. Do not widen the allowlist or enable registration without a product decision.
 
-- `ryanchinqf2@gmail.com`
-- `mohamedizzatamin@gmail.com`
+### Original import record
 
-Implement verified sign-in (Google OAuth or verified email link); map approved identities to server-managed admin roles. Do not infer admin access from an email supplied by browser JavaScript. Protect admin APIs and data with server-side authorization and database policies. Plan invite/recovery, sign-out, session expiry and unauthorized states. These addresses are planned identities, not functioning accounts today.
-
-Target architecture for evaluation: Next.js + TypeScript for the author application and publication routes; Postgres/Supabase Auth and storage as the baseline in devplan. Validate provider choice before implementation. Keep the existing renderer as the reference and extract business rules behind tests before migrating it.
-
-Initial entities: user, personal workspace, brand/template and template revision, project/draft, publication/revision, share access, recipient response and engagement event. Users own projects; tenant boundaries apply to every lookup and write. Preserve draft JSON import/export as the migration path. No company collaboration UI in the personal MVP.
+Partner commit `3fc3108` was imported with history and authorship. Concept artwork was removed. The Desktop source was deleted only after source comparison and GitHub verification; transport archives remain in ignored `.handoff/`. Source layout, embedded recipient apps and core renderer remain the reference implementation.
 
 ## Phase 2 — brand, UX, website and personal MVP
 

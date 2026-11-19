@@ -6,9 +6,12 @@
 'use strict';
 const $ = id => document.getElementById(id);
 const OSIRIS_HEAD = '<title>Osiris - VI</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,@@b64:assets/favicon.svg@@">';
-const DRAFTS_KEY = 'vi-proposal-drafts-v4';
-const LEGACY_KEY = 'vi-proposal-deck-v3';
-const ME_KEY = 'vi-consultant-v1';
+const AUTH = window.parent.OsirisAuth;
+if (!AUTH?.user?.id) throw new Error('Sign in to open the OSIRIS builder.');
+const accountKey = key => key + ':' + AUTH.user.id;
+const DRAFTS_KEY = accountKey('vi-proposal-drafts-v4');
+const LEGACY_KEY = accountKey('vi-proposal-deck-v3');
+const ME_KEY = accountKey('vi-consultant-v1');
 const MAX_COURSES = 6;
 const pad = n => String(n).padStart(2, '0');
 const isoOf = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
@@ -121,7 +124,7 @@ const SEED_DRAFTS = [
 @@seeds@@
 ];
 /* A seed with a higher rev than this browser last applied replaces that draft (used when Claude corrects a saved client). */
-const SEED_REV_KEY = "vi-seed-revs";
+const SEED_REV_KEY = accountKey('vi-seed-revs');
 function mergeSeedDrafts(){
   let changed = false, revs = {};
   try { revs = JSON.parse(localStorage.getItem(SEED_REV_KEY) || "{}") || {}; } catch (e) {}
@@ -1624,83 +1627,84 @@ function buildHostedHtml(state, mode){
     '</body>', '</html>'
   ].join('\n');
 }
-let gsitesMode = 'player';
-function gsStatus(msg, kind){ const el = $('gsites-status'); el.textContent = msg || ''; el.classList.toggle('is-error', kind === 'error'); el.classList.toggle('is-ok', kind === 'ok'); }
-function refreshGoogleSitesModal(){
-  syncGsWhat();
-  const html = exportHtml();
-  $('gsites-code').value = html;
-  $('gsites-meta').textContent = exportMeta(html);
-  if (!$('gs-prev-host').hidden && prevKind) showPreview(prevKind);
+/* ---------- Preview and share ---------- */
+let shareHtml = '', shareBusy = false, shareOriginButton = null;
+const slugify = value => String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80).replace(/-$/, '');
+function shareStatus(text, error = false){ $('share-status').textContent = text; $('share-status').classList.toggle('is-error', error); }
+function openShareModal(){
+  shareOriginButton = document.activeElement;
+  shareHtml = buildSiteHtml(deckState(), 'player');
+  $('share-slug').value = slugify(S.client || autoName(S)) || 'project-name';
+  $('share-result').hidden = true; $('share-publish').hidden = false;
+  $('share-publish').disabled = false; $('share-slug').disabled = false;
+  shareStatus(''); $('share-modal').hidden = false; $('share-slug').focus();
 }
-function openGoogleSitesModal(){
-  refreshGoogleSitesModal();
-  gsStatus('Ready to copy.');
-  $('gsites-modal').hidden = false;
-  $('gsites-copy').focus();
-}
-function closeGoogleSitesModal(){ $('gsites-modal').hidden = true; showPreview(null); }
-async function copyGoogleSitesEmbed(){
-  const ta = $('gsites-code');
-  let ok = false;
-  if (navigator.clipboard && navigator.clipboard.writeText){ try { await navigator.clipboard.writeText(ta.value); ok = true; } catch (e) {} }
-  if (!ok){ try { ta.focus(); ta.select(); ok = document.execCommand('copy'); } catch (e) {} }
-  if (ok){ gsStatus('Copied. In Google Sites, paste it into a Full page embed (Pages → + → Full page embed), or Insert → Embed → Embed code.', 'ok'); status('Embed code copied.', 'ok'); }
-  else { ta.focus(); ta.select(); gsStatus('The code is selected: press Ctrl+C (or Cmd+C) to copy it.'); }
-  return ok;
-}
-let prevKind = null;
-function showPreview(kind){
-  const host = $('gs-prev-host');
-  prevKind = kind;
-  document.querySelector('[data-prev="none"]').hidden = !kind;
-  if (!kind){ host.hidden = true; host.innerHTML = ''; return; }
-  const sizes = {box:[880, 495], small:[420, 300], phone:[390, 720]};
-  const [w, h] = sizes[kind];
-  host.hidden = false;
-  const avail = Math.max(280, host.clientWidth - 26 || 860);
-  const scale = Math.min(1, avail / w);
-  host.innerHTML = '<div style="width:' + Math.round(w * scale) + 'px;height:' + Math.round(h * scale) + 'px;position:relative"><iframe title="Embed preview" width="' + w + '" height="' + h + '" style="transform:scale(' + scale + ');transform-origin:0 0;position:absolute;left:0;top:0" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-downloads allow-same-origin"></iframe></div>';
-  host.querySelector('iframe').srcdoc = $('gsites-code').value;
-}
-document.querySelectorAll('[data-prev]').forEach(b => b.addEventListener('click', () => showPreview(b.dataset.prev === 'none' ? null : b.dataset.prev)));
+function closeShareModal(){ if (shareBusy) return; $('share-modal').hidden = true; shareHtml = ''; shareOriginButton?.focus(); }
 function previewHostedWebDeck(){
-  const html = buildSiteHtml(deckState(), 'player');
-  try {
-    const w = window.open('', '_blank');
-    if (w && w.document){ w.document.open(); w.document.write(html); w.document.close(); status('Opened the microsite in a new tab. Resize the window to see how it adapts; its forms send for real there, so use the Forms & contact preview to try them.', 'ok'); return; }
-  } catch (e) {}
-  status('The browser blocked the new tab. Use the Calculator and Forms & contact previews here, or Google Sites / website → Preview here.', 'error');
+  $('preview-frame').srcdoc = buildSiteHtml(deckState(), 'player', {preview:true});
+  $('preview-modal').hidden = false; $('preview-close').focus();
 }
-$('dl-gsites').addEventListener('click', () => { if (needClient()) gate(openGoogleSitesModal); });
+function closePreview(){ $('preview-modal').hidden = true; $('preview-frame').srcdoc = ''; $('preview-web').focus(); }
+$('share-deck').addEventListener('click', () => { if (needClient()) gate(openShareModal); });
 $('preview-web').addEventListener('click', () => { if (needClient()) previewHostedWebDeck(); });
-$('gsites-close').addEventListener('click', closeGoogleSitesModal);
-$('gsites-modal').addEventListener('click', e => { if (e.target === $('gsites-modal')) closeGoogleSitesModal(); });
+$('preview-close').addEventListener('click', closePreview);
+$('preview-share').addEventListener('click', () => { closePreview(); gate(openShareModal); });
+$('share-close').addEventListener('click', closeShareModal);
+$('share-modal').addEventListener('click', e => { if (e.target === $('share-modal')) closeShareModal(); });
+$('share-publish').addEventListener('click', async () => {
+  if (shareBusy) return;
+  const slug = $('share-slug').value.trim();
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 80) { shareStatus('Use lowercase letters, numbers and hyphens for the project name.', true); $('share-slug').focus(); return; }
+  shareBusy = true; $('share-publish').disabled = true; $('share-close').disabled = true; $('share-slug').disabled = true;
+  shareStatus('Publishing your proposal…');
+  try {
+    const token = await AUTH?.getToken();
+    if (!token) throw new Error('Sign in again before sharing.');
+    const response = await fetch('/api/publish', {method:'POST', headers:{'Content-Type':'application/json', Authorization:'Bearer ' + token}, body:JSON.stringify({slug, html:shareHtml})});
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Could not publish. Please try again.');
+    $('share-url').value = result.url; $('share-open').href = result.url;
+    $('share-result').hidden = false; $('share-publish').hidden = true;
+    shareStatus('Your link is ready. Anyone with this link can view this published version.'); $('share-copy').focus();
+  } catch (error) { shareStatus(error.message, true); $('share-slug').disabled = false; }
+  finally { shareBusy = false; $('share-publish').disabled = false; $('share-close').disabled = false; }
+});
+$('share-copy').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText($('share-url').value); shareStatus('Link copied. Ready to send.'); }
+  catch { $('share-url').focus(); $('share-url').select(); shareStatus('Select and copy the link above.'); }
+});
+$('account-email').textContent = AUTH?.user.email || '';
+$('account-signout').addEventListener('click', () => AUTH?.signOut());
+// Earlier public builds saved drafts without an account. Recover them only on request.
+$('recover-drafts').addEventListener('click', () => {
+  try {
+    const previous = JSON.parse(localStorage.getItem('vi-proposal-drafts-v4') || 'null');
+    if (!previous?.drafts || !Object.keys(previous.drafts).length) { status('No earlier drafts were found in this browser.', 'error'); return; }
+    if (!confirm('Copy the drafts saved before sign-in into your current account on this browser?')) return;
+    for (const draft of Object.values(previous.drafts)) {
+      const id = newId(); store.drafts[id] = {id, name:draft.name || 'Recovered proposal', custom:true, updated:Date.now(), state:normalise(draft.state)};
+    }
+    saveStore(); renderDraftSelect(); status('Earlier drafts recovered. Select one from the Draft list.', 'ok');
+  } catch { status('The earlier drafts could not be read. Import a saved JSON backup instead.', 'error'); }
+});
 document.addEventListener('keydown', e => {
+  if (e.key === 'Tab') {
+    const dialog = !$('share-modal').hidden ? $('share-modal') : !$('preview-modal').hidden ? $('preview-modal') : null;
+    if (dialog) {
+      const focusable = [...dialog.querySelectorAll('button,input,a[href],iframe')].filter(el => !el.disabled && el.getClientRects().length);
+      const first = focusable[0], last = focusable.at(-1);
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+    }
+  }
   if (e.key !== 'Escape') return;
   if (!$('gate-modal').hidden) closeGate();
-  else if (!$('gsites-modal').hidden) closeGoogleSitesModal();
+  else if (!$('share-modal').hidden) closeShareModal();
+  else if (!$('preview-modal').hidden) closePreview();
   else if (!$('notes-modal').hidden) closeNotes();
   else if (!$('xfer-modal').hidden) closeXfer();
   else if (!$('pp-modal').hidden) $('pp-modal').hidden = true;
   else closeMenus();
-});
-$('gsites-mode').addEventListener('click', e => {
-  const b = e.target.closest('button[data-mode]'); if (!b) return;
-  gsitesMode = b.dataset.mode;
-  document.querySelectorAll('#gsites-mode button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-  refreshGoogleSitesModal();
-  gsStatus('Embed code updated: ' + (gsitesMode === 'player' ? 'slide player.' : 'scrolling page.'));
-});
-$('gsites-select').addEventListener('click', () => { $('gsites-code').focus(); $('gsites-code').select(); });
-$('gsites-copy').addEventListener('click', () => { copyGoogleSitesEmbed(); });
-$('gsites-copy-open').addEventListener('click', async () => { await copyGoogleSitesEmbed(); window.open('https://sites.google.com/new', '_blank', 'noopener,noreferrer'); });
-$('gsites-dl-html').addEventListener('click', async () => {
-  const meta = deckMeta(built.ctx);
-  const fn = meta.base + GS_WORDS[gsWhat][1];
-  const res = await VI.deliver(new Blob([$('gsites-code').value || exportHtml()], {type:'text/html;charset=utf-8'}), fn);
-  if (res !== 'saved'){ gsStatus(VI.deliverMsg(res), res === 'declined' ? '' : 'error'); return; }
-  gsStatus('Saved ' + fn + '. Upload it to any web host, or open it directly in a browser.', 'ok');
 });
 
 /* =====================================================================
@@ -1719,7 +1723,7 @@ function normaliseSite(st){
   st.uen = String(st.uen || '');
 }
 /* Where forms go and how the contact buttons behave: one set per computer, like the consultant details */
-const SITE_KEY = 'vi-microsite-v1';
+const SITE_KEY = accountKey('vi-microsite-v1');
 let SITECFG = {hook:'', enrolUrl:'', wa:'', msg:true};
 try { Object.assign(SITECFG, JSON.parse(localStorage.getItem(SITE_KEY) || '{}') || {}); } catch (e) {}
 function saveSiteCfg(){ try { localStorage.setItem(SITE_KEY, JSON.stringify(SITECFG)); } catch (e) {} }
@@ -2037,37 +2041,6 @@ window.addEventListener('message', e => {
     const v = m.tab === 'calc' ? 'calc' : 'forms';
     if (v !== view && view !== 'slides'){ view = v; document.querySelectorAll('#view-seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v))); }
   }
-});
-
-/* ---------- Export dialog: the whole microsite, or one part ---------- */
-let gsWhat = 'site';
-const GS_WORDS = {site:['Client microsite','_Microsite.html'], deck:['Proposal deck only','_Web_Deck.html'], calc:['Calculator only','_Calculator.html'], survey:['Team scoping survey only','_Team_Survey.html']};
-function exportHtml(){
-  return gsWhat === 'deck' ? buildHostedHtml(deckState(), gsitesMode) : gsWhat === 'calc' ? buildCalcOnlyHtml(deckState())
-    : gsWhat === 'survey' ? buildSiteHtml(deckState(), gsitesMode, {only:'survey'}) : buildSiteHtml(deckState(), gsitesMode);
-}
-function exportMeta(html){
-  const size = fmtSize(new Blob([html]).size);
-  if (gsWhat === 'calc') return 'Calculator only · ' + size + ' · opens on this proposal’s courses and SFEC balance';
-  if (gsWhat === 'survey') return 'Team scoping survey only · ' + size + ' · no proposal, fees or calculator on the page';
-  const deckPart = (gsitesMode === 'player' ? 'slide player' : 'scrolling page') + ', ' + built.main + ' slides';
-  if (gsWhat === 'deck') return 'Proposal deck only · ' + deckPart + ' · ' + size;
-  const tabs = ['Proposal deck'].concat(calcOn(S) ? ['Calculator'] : [], S.site.scope ? ['Team scoping'] : [], S.site.enrol ? ['Enrol'] : [], S.site.contact ? ['Contact'] : []);
-  return 'Microsite · ' + tabs.join(', ') + ' · deck as ' + deckPart + ' · ' + size;
-}
-function syncGsWhat(){
-  if ((gsWhat === 'calc' && !calcOn(S)) || (gsWhat === 'survey' && !S.site.scope)) gsWhat = 'site';
-  document.querySelectorAll('#gsites-what button').forEach(b => { b.setAttribute('aria-pressed', String(b.dataset.what === gsWhat)); if (b.dataset.what === 'calc') b.disabled = !calcOn(S); if (b.dataset.what === 'survey') b.disabled = !S.site.scope; });
-  $('gsites-mode-wrap').hidden = gsWhat === 'calc' || gsWhat === 'survey';
-  $('gsites-what-note').textContent = gsWhat === 'site'
-    ? 'One embed with a tab bar: the client moves between the proposal' + (calcOn(S) ? ', the calculator' : '') + ' and the pages ticked under Client microsite. Changes they make in the calculator carry into the Enrol tab and its Excel file.'
-    : gsWhat === 'deck' ? 'The interactive deck by itself, exactly as before.' : gsWhat === 'calc' ? 'The calculator by itself, for a page of its own.'
-    : 'Only the pre-training survey, for a page you share with the participants: they never see the proposal, the fees or the calculator.';
-}
-$('gsites-what').addEventListener('click', e => {
-  const b = e.target.closest('button[data-what]'); if (!b || b.disabled) return;
-  gsWhat = b.dataset.what; refreshGoogleSitesModal();
-  gsStatus('Embed code updated: ' + GS_WORDS[gsWhat][0].toLowerCase() + '.');
 });
 
 /* ---------- The enrolment Excel, for you to send yourself: the same file the client downloads from the Enrol tab ---------- */
