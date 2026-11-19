@@ -1,10 +1,10 @@
 # Prototype roadmap, concerns and decisions
 
-> Scope: how this prototype feeds the OSIRIS product. The product plan of record (MVP scope, journeys, pricing spec, Next.js + Supabase architecture) is [`../../devplan.md`](../../devplan.md); where they differ, devplan.md wins.
+> Scope: how this prototype feeds the OSIRIS product. The product plan of record (MVP scope, journeys, pricing spec, Next.js + Supabase architecture) is [`../../devplan.md`](../../devplan.md); current priorities and scope updates are in [`../../devnotes.md`](../../devnotes.md), which take precedence over older proposals.
 
 ## Decisions (19 Nov 2026)
 
-1. **Ownership and direction.** Osiris is Izzat's own project, built to speed up his consulting work, with value beyond Vertical Institute (VI). VI-specific material (logo, course icons, photos, course content, fees, enrolment template) becomes one tenant/template pack, not part of the core product.
+1. **Ownership and direction.** Osiris is Ryan and Izzat's project, built to speed up his consulting work, with value beyond Vertical Institute (VI). VI-specific material (logo, course icons, photos, course content, fees, enrolment template) becomes one tenant/template pack, not part of the core product.
 2. **Client data.** Published client work moves into a secure database. Until then, real client drafts stay out of git (`data/*.local.js`).
 3. **Workflow.** Izzat builds and tests features locally and pushes accepted work to the repo. The partner owns Vercel deployments, UI/UX, auth and analytics.
 4. **Hosting.** Paid tiers (Vercel Pro, database, auth) accepted as needed.
@@ -38,9 +38,9 @@ Mapping from today's code: a **template** is what is hard-coded now (`content.js
 
 ## Phase 2: accounts (partner: auth)
 
-- Auth (e.g. Supabase Auth, Clerk or Auth.js) with organisations and roles (owner, consultant, viewer)
+- Verified auth with server-managed admin access for the two founders; individual project ownership first, company memberships and collaborator roles after MVP validation
 - Accounts own Templates and Projects; projects move from `localStorage` to a secure database (e.g. Postgres via Supabase with row-level security), with an import path for existing `.json` draft exports
-- Publish to client: hosted microsites at `<domain>/c/<slug>` instead of copy-paste HTML, with per-link expiry and optional passcode
+- Publish to client: hosted microsites at `<domain>/<organisation>/<consultant>/<client-project>` instead of copy-paste HTML, with per-link expiry and optional passcode
 - Survey responses stored in Osiris (Apps Script stays as an optional export to Google Sheets)
 
 ## Phase 3: analytics (partner: user-facing analytics)

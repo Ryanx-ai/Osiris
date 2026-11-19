@@ -1,90 +1,51 @@
 # OSIRIS
 
-**Purpose-built interactive proposal builder for small teams and companies.**
+Interactive presentations and proposals, from a reusable brand template to a client-facing microsite.
 
-Create a branded proposal, let recipients explore approved options, and turn their preferred scope into a clear next step.
+**Development baseline · 19 November 2026.** Izzat's working prototype is now in `prototype/`. Its browser runtime, source layout, slide renderer, calculator and export pipeline are preserved. Concept artwork has been removed from the working tree; earlier Git commits retain it.
 
-> **Status: concept and planning only — 18 November 2026.** No application, dependencies, database, deployment, or working prototype has been created. Development requires a separate instruction from the project owner.
+## Run locally
 
-## The idea
+Use Node.js 22. No application packages need installing.
 
-OSIRIS brings a proposal's story, scope, pricing, questions, and contact options into one shareable experience. Start as a personal tool for creating and reusing proposals; expand to a small-team product only after the personal workflow proves useful.
+```sh
+cd prototype
+npm run build:public
+npm run dev
+npm test
+```
 
-The author controls the content, design, commercial rules, and which fields recipients can change. Recipients can explore quantities, options, delivery preferences, and goals without altering the original proposal. A review step makes it clear when an exploration becomes a submitted request.
+Open the local server URL, or open `prototype/dist/index.html` directly after building. `build` can include private local seed drafts; `build:public` and Vercel builds exclude them. Drafts are stored in this browser only. Export draft JSON for backup; changing from a Vercel hostname to the custom domain does not transfer browser storage.
 
-## Planned capabilities
+## Deploy and share
 
-| Capability | What it enables |
-| --- | --- |
-| Style builder | Set logos, colour, typography, cover images, spacing, and section layouts with a live preview. |
-| Proposal customisation | Add and reorder sections; reuse client information and templates. |
-| Editable client fields | Add labelled text, number, date, choice, and checkbox fields with defaults, limits, and permissions. |
-| Cost calculator | Connect permitted choices to an itemised estimate; show the original and current scenario clearly. |
-| Scoping | Collect objectives, constraints, deliverables, team needs, and timing. |
-| Call to action | Review a selection, request confirmation, request changes, or book a discussion. |
-| Contact | Show a named proposal owner and configured email, phone, messaging, or booking links. |
+- Repository: [Ryanx-ai/Osiris](https://github.com/Ryanx-ai/Osiris), production branch `main`.
+- Vercel: project `osiris`, team `Pangea` (`pangea6`), Root Directory `prototype`.
+- Build: `node scripts/build.mjs --public`; output: `dist`; framework: Other; Node.js 22.
+- Domain: **osirisdeck.com**, purchased. Ryan will connect DNS separately. Keep the production `vercel.app` alias available alongside it.
+- Client URL shape: `https://osirisdeck.com/vertical-institute/consultant-name/client-companya`.
 
-## Concept visuals
+The same path works on the production Vercel hostname. [Manual publishing instructions](prototype/published/README.md) explain how to deploy an exported recipient page without changing the builder. Unknown paths return 404; they do not expose the editor. Publishing is currently a reviewed file + Git push, not an in-app button. The public GitHub repository and static published pages must contain only material approved for public access. `noindex` is not access control.
 
-These are static, AI-generated design explorations, not functioning screens. Apple, Starbucks, and McDonald's are fictional recipients used to demonstrate theme flexibility. They are not customers, partners, or endorsers. All programme descriptions and prices are invented examples.
+## What works now
 
-### Main dashboard — Apple-layout direction
+The Vertical Institute prototype creates browser-local drafts, interactive decks, calculators, team-scoping pages, enrolment workbooks and contact pages. It exports recipient HTML, PDF and PowerPoint. Survey submission requires a consultant-configured Apps Script service. AI features tied to the original Claude environment are unavailable on ordinary hosting.
 
-The preferred OSIRIS layout carries the Apple concept's monochrome shell into the personal workspace: a dark navigation rail, white panels, clear typography, and a single prominent creation action. Resume a draft, review a new client response, or manage published links from the same dashboard.
+There is no OSIRIS login, shared database, admin dashboard or engagement analytics yet. The live builder is a prototype; it does not grant admin privileges or share one user's browser-local drafts with another user.
 
-![OSIRIS main dashboard concept](concepts/osiris-dashboard.png)
+## Next phases
 
-The sample dashboard contains three drafts, two published proposals, and one new response. These are fictional records. A response is a client request, not an accepted contract.
+1. Plan authentication and project storage, with verified admin accounts for Ryan and Izzat.
+2. Define OSIRIS branding, UI/UX, website, information architecture and the create-to-share journey.
+3. Build the personal MVP: users create projects; **Brand Studio** manages templates; **Deck Builder** edits variables and content for presentations and proposals.
+4. Add reliable publishing, recipient interaction and printable PDF output, followed by admin and user-facing engagement analytics.
+5. Add company workspaces and collaborators after the personal MVP is proven.
 
-### From creating a proposal to sharing it
+## Project documents
 
-**Create → Customise → Configure → Preview → Publish and copy → Client view.**
+- [Developer notes](devnotes.md): current state, decisions, phased work and release record.
+- [Development and design plan](devplan.md): detailed design/architecture proposals, updated scope precedence.
+- [Prototype guide](prototype/README.md) and [architecture](prototype/docs/ARCHITECTURE.md): implementation and known limitations.
+- [Reference client experience](https://sites.google.com/verticalinstitute.com/hebei-jinbiao-corp-training/hebei-jinbiao-construction-materials): target interaction pattern, not OSIRIS production content.
 
-![OSIRIS create-to-share storyboard](concepts/osiris-create-to-share.png)
-
-1. Choose a template and enter the client and proposal name.
-2. Edit the content, sections, and style in the Apple-inspired editor.
-3. Define recipient-editable choices and connect them to author-controlled prices.
-4. Preview the recipient experience and verify layout, inputs, and totals.
-5. Publish a fixed revision, set access and expiry, then copy its link to share yourself.
-6. The client opens a clean proposal, explores scope, and reviews a selection before requesting confirmation.
-
-Publishing or copying a link does not send a message. The storyboard's `osiris.example` address is an illustrative placeholder, not a live application. [Detailed dashboard and flow specification](devplan.md#dashboard-and-create-to-share-concepts).
-
-### Apple — author style builder
-
-Minimal typography, monochrome imagery, and a live proposal preview beside theme controls.
-
-![OSIRIS Apple style-builder concept](concepts/osiris-apple.png)
-
-### Starbucks — recipient scope and estimate
-
-A warm editorial theme, adjustable programme options, and an itemised scenario summary. The top preview toolbar belongs to the author and would be absent from the recipient's shared link.
-
-![OSIRIS Starbucks recipient-preview concept](concepts/osiris-starbucks.png)
-
-### McDonald's — editable-field builder
-
-An author selects a field, permits client editing, sets bounds, and connects it to a controlled price rule.
-
-![OSIRIS McDonald's field-builder concept](concepts/osiris-mcdonalds.png)
-
-The detailed plan takes precedence over incidental UI or typography differences in these generated images. System navigation, iconography, field styling, and accessibility still need design refinement.
-
-## Planning documents
-
-- [Development and design plan](devplan.md): reference investigation, user journeys, MVP scope, field permissions, calculation specification, architecture, acceptance criteria, roadmap, and startup validation.
-- [Concept generation prompts](devplan.md#appendix-concept-generation-prompts): the exact prompt sets used with the built-in Imagegen tool, including the dashboard and create-to-share storyboard.
-
-## Recommended first release
-
-One owner, one workspace, reusable proposals, constrained theme presets, editable client fields, one currency per proposal, a reliable estimate, a private share link, recipient response capture, and a printable snapshot. Begin with training and consulting proposals; broaden templates after testing real use.
-
-Team collaboration, subscriptions, CRM integration, payments, legally binding signatures, AI generation, and a template marketplace are later possibilities, not commitments for the first release.
-
-## Reference and repository
-
-- [Interactive proposal reference](https://sites.google.com/verticalinstitute.com/hebei-jinbiao-corp-training/hebei-jinbiao-construction-materials): inspected in the browser on 18 November 2026. The plan distinguishes observed recipient behaviour from inferred architecture and proposed OSIRIS features.
-- [GitHub repository](https://github.com/Ryanx-ai/Osiris).
-
-There are intentionally no install or run instructions yet.
+Ryan and Izzat co-develop OSIRIS. Use focused branches and review changes before merging. No framework migration or visual redesign is part of this import.

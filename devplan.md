@@ -1,10 +1,10 @@
 # OSIRIS — development and design plan
 
-**Planning baseline:** 18 November 2026 · **Owner:** Ryan · **Stage:** concept only
+**Planning baseline:** 18 November 2026 · **Updated:** 19 November 2026 · **Owners:** Ryan and Izzat · **Stage:** working prototype
 
 **Purpose:** a purpose-built interactive proposal builder for small teams and companies, beginning with personal usage.
 
-This document specifies a possible future implementation. It does not authorise development. The present deliverables are this plan, the README, and five static concept visuals: three brand examples, the main dashboard, and a create-to-share storyboard. No executable prototype, application scaffold, dependency installation, infrastructure, or deployment is included.
+The prototype is now imported under `prototype/`. The current release scope and phased plan are in [devnotes.md](devnotes.md), which takes precedence over older proposals here. Today preserves the prototype structure and deploys it; authentication, analytics, Brand Studio, Deck Builder redesign and the website remain upcoming work. MVP: individual users create projects supporting presentations and proposals. Company workspaces and collaborators follow only after MVP validation. Production domain: `osirisdeck.com`; client routes: `/{organisation}/{consultant}/{client-project}`. Earlier concept artwork was removed; textual design research remains historical input, not an approved new visual direction.
 
 ## 1. Product direction
 
@@ -158,7 +158,6 @@ Each published link is bound to a revision. Republishing does not silently chang
 
 **Design direction selected on 18 November 2026:** use the original Apple OSIRIS concept's layout as the reference for the main application and author journey. This selects the monochrome shell, circular O mark, dark rail, white panels, system-sans typography, generous spacing, and restrained black buttons. Apple remains a fictional recipient; the workspace belongs to the author, not Apple.
 
-![Main OSIRIS dashboard](concepts/osiris-dashboard.png)
 
 #### Dashboard structure and behaviour
 
@@ -181,7 +180,6 @@ First-use state: replace the counters and recent-draft panel with “Create your
 
 On mobile, replace the full navigation with a labelled menu, stack the resume/attention panels, and turn table rows into compact list items. Keep Create proposal reachable. This responsive design is specified but not visually rendered in the current dashboard image.
 
-![Create-to-share storyboard](concepts/osiris-create-to-share.png)
 
 #### Six-screen author-to-client flow
 
@@ -202,7 +200,7 @@ The fictional Apple example uses 24 participants at S$300 plus a S$1,200 program
 
 - Publishing creates a fixed revision; copying a link is a separate action. Neither sends a message or creates a client response.
 - The sample access choice is “Anyone with the link”, with a visible expiry. Explain that this link can be forwarded. Verified-recipient access remains a separate decision for confidential use.
-- The visual's `osiris.example/p/apple-v1` is a reserved-domain mock URL. A real implementation uses an unpredictable token, not a guessable client name.
+- The visual's `osiris.example/p/apple-v1` is a reserved-domain mock URL. The current URL contract uses company/consultant/client-project slugs. Private publications will require access controls independently of those readable slugs.
 - After copying, show “Link copied” only when clipboard writing succeeds. If blocked, retain a selectable URL and manual-copy guidance.
 - “Open client view” opens the published version, while author preview may contain unsaved scenario exploration. Keep the distinction explicit.
 - Closing and reopening the share dialog preserves link settings. Expiry changes and revocation affect access, never rewrite the revision's commercial content.
@@ -230,9 +228,9 @@ The style builder controls semantic tokens: page background, surface, body text,
 
 | Concept | Purpose | Visual approach | Example scenario |
 | --- | --- | --- | --- |
-| [Apple](concepts/osiris-apple.png) | Style-editor demonstration | Monochrome, generous whitespace, bold sans headings, architectural imagery | Retail team enablement; 24 participants, 3 workshops, 6 weeks |
-| [Starbucks](concepts/osiris-starbucks.png) | Recipient exploration | Forest green, cream, editorial headline, warm café photograph | Store team programme; 24 × S$300 + S$1,200 = S$8,400 before tax |
-| [McDonald's](concepts/osiris-mcdonalds.png) | Field configuration | Golden yellow, black text, energetic headings, restrained red | Crew programme; 60 × S$180 + S$1,800 = S$12,600 before tax |
+| Apple (historical concept) | Style-editor demonstration | Monochrome, generous whitespace, bold sans headings, architectural imagery | Retail team enablement; 24 participants, 3 workshops, 6 weeks |
+| Starbucks (historical concept) | Recipient exploration | Forest green, cream, editorial headline, warm café photograph | Store team programme; 24 × S$300 + S$1,200 = S$8,400 before tax |
+| McDonald's (historical concept) | Field configuration | Golden yellow, black text, energetic headings, restrained red | Crew programme; 60 × S$180 + S$1,800 = S$12,600 before tax |
 
 All examples are fictional. The visuals establish direction; they do not validate demand or imply brand affiliation. Prices are illustrative and omit any tax assumption. The sample selectable modules are scope choices within the example package; a separately priced add-on must show its incremental price before selection.
 
@@ -423,7 +421,7 @@ Add owner/editor/viewer roles, invitations, shared brand kits, ownership transfe
 
 ## 10. Verification and acceptance
 
-No application tests were run in this planning stage because there is no application. Before a later release, verify meaningful behaviours rather than reproducing implementation details.
+No application tests were run in the original 18 November planning stage. Current prototype checks are recorded in devnotes.md. Before a later release, verify meaningful behaviours rather than reproducing implementation details.
 
 | Area | Required evidence |
 | --- | --- |
@@ -494,7 +492,7 @@ Image generation used the built-in Imagegen tool. The exact prompt set follows f
 
 ### Main dashboard
 
-Reference image: `concepts/osiris-apple.png`. Generated with the built-in Imagegen tool on 18 November 2026.
+Historical reference: Apple concept artwork (removed from the current tree). Generated with the built-in Imagegen tool on 18 November 2026.
 
 ```text
 Use case: ui-mockup. Create one polished high-fidelity OSIRIS MAIN DASHBOARD desktop screenshot. Use the attached Apple OSIRIS editor image as the exact visual-language reference, not as content to repeat. Preserve its white circular O mark in narrow charcoal left rail, black OSIRIS wordmark, warm light gray workspace, white panels, fine gray borders, clean system sans typography, soft 10px corners, black primary buttons, and generous whitespace. Landscape 16:10, large readable typography, straight-on flat screenshot, no physical device or perspective.
@@ -507,7 +505,7 @@ Small footer 'OSIRIS / DASHBOARD CONCEPT' and 'Fictional sample data · No worki
 
 ### Create-to-share storyboard
 
-Reference image: `concepts/osiris-apple.png`. Generated with the built-in Imagegen tool on 18 November 2026.
+Historical reference: Apple concept artwork (removed from the current tree). Generated with the built-in Imagegen tool on 18 November 2026.
 
 ```text
 Use case: ui-mockup. Create a high-resolution premium product storyboard showing SIX coherent OSIRIS screens from creating a proposal to client sharing. Use attached Apple OSIRIS image as visual-language reference: circular white O in charcoal rail, white OSIRIS header, system sans typography, gray workspace, white panels, black buttons, thin borders, restrained radii. Flat front-view design board, landscape 3:2 at high resolution, no devices or perspective. Six spacious screen panels in exactly 3 columns and 2 rows, numbered left to right top row 01-03 then bottom row 04-06. Generous gutters, crisp readable text. Main title 'OSIRIS / From draft to client' subtitle 'One proposal. A clear path to sharing.' Tiny 'STATIC DESIGN CONCEPT · FICTIONAL APPLE EXAMPLE'. Each panel contains a realistic simplified app screen, not a conceptual icon or paragraph, and its step label above. Keep each miniature UI sparse enough to read; hierarchy matters more than dense text.

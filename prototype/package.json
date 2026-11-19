@@ -4,10 +4,11 @@
   "private": true,
   "description": "Osiris: client proposal microsite builder (proposal deck, funding calculator, scoping survey, enrolment and contact in one embeddable page).",
   "type": "module",
-  "engines": { "node": ">=18" },
+  "engines": { "node": "22.x" },
   "scripts": {
     "build": "node scripts/build.mjs",
     "build:public": "node scripts/build.mjs --public",
+    "test": "node --test scripts/*.test.mjs",
     "dev": "node scripts/build.mjs && npx --yes serve dist -l 3000"
   }
 }

@@ -1,6 +1,6 @@
 # Osiris prototype: VI Client Microsite Builder v2
 
-> This folder is the **working prototype** that OSIRIS grows from. The product plan of record is [`../devplan.md`](../devplan.md) and the concepts in [`../concepts/`](../concepts/). This code is the reference implementation of the recipient experience that plan describes (client microsites like the one reviewed in devplan.md section 2 are its output).
+> This folder is the **working prototype** that OSIRIS grows from. The product plan of record is [`../devplan.md`](../devplan.md) and the current decisions in [`../devnotes.md`](../devnotes.md). This code is the reference implementation of the recipient experience that plan describes (client microsites like the one reviewed in devplan.md section 2 are its output).
 
 **Client proposal microsite builder.** A consultant enters a client brief once, and Osiris produces everything that client needs to say yes, as one embeddable page:
 
@@ -26,7 +26,7 @@ npm run build:public   # -> dist/index.html with no client data (what Vercel ser
 npm run dev            # build + serve on http://localhost:3000
 ```
 
-Requirements: Node 18+. No npm dependencies. Opening `dist/index.html` directly in a browser also works.
+Requirements: Node 22. No npm dependencies. Opening `dist/index.html` directly in a browser also works.
 
 ## How the code is organised
 
@@ -114,3 +114,7 @@ Target product structure: **User account → Templates | Projects → Edit → P
 v0.2.0: faithful dissection of the artifact. Single-tenant (Vertical Institute), no auth, no server, no analytics. See `docs/ROADMAP.md` for what has to change before external users.
 
 Licence: none yet (all rights reserved).
+
+## OSIRIS integration — 19 November 2026
+
+See [developer notes](../devnotes.md) for current scope. The source layout and core runtime are preserved. The public build additionally copies reviewed recipient exports from [`published/`](published/README.md) to `/{organisation}/{consultant}/{client-project}`. Run `npm test` for publication-path checks. Brand Studio, Deck Builder redesign, authentication and analytics are planned; collaborator access follows MVP validation.

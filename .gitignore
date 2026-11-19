@@ -1,0 +1,6 @@
+.DS_Store
+.handoff/
+.vercel/
+.env*
+node_modules/
+prototype/dist/

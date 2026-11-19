@@ -12,7 +12,8 @@
  *
  * Zero dependencies, so it runs anywhere Node 18+ runs, including Vercel's build image.
  */
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { copyPublishedDecks } from './published.mjs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -34,7 +35,11 @@ function expand(src) {
 const html = expand(text('src/index.html'));
 if (/@@(file|b64):|@@seeds@@/.test(html)) throw new Error('Unexpanded marker left in output');
 
+// Rebuild from scratch so withdrawn publications cannot survive locally.
+rmSync(join(ROOT, 'dist'), { recursive: true, force: true });
 mkdirSync(join(ROOT, 'dist'), { recursive: true });
 writeFileSync(join(ROOT, 'dist/index.html'), html);
+const published = copyPublishedDecks(join(ROOT, 'published'), join(ROOT, 'dist'));
+console.log(`Published client pages: ${published}`);
 const sha = createHash('sha256').update(html).digest('hex');
 console.log(`dist/index.html  ${(Buffer.byteLength(html) / 1024 / 1024).toFixed(2)} MB  sha256 ${sha}  ${PUBLIC ? '(public: no client seeds)' : existsSync(SEEDS) ? '(local: with client seeds)' : '(no seeds file)'}`);
