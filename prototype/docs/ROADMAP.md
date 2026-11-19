@@ -27,7 +27,7 @@ Mapping from today's code: a **template** is what is hard-coded now (`content.js
 - [x] Strip client data from public builds
 - [x] Static deploy config for Vercel with noindex
 - [x] Repo on GitHub, Vercel project connected for auto-deploys
-- [ ] Custom domain: `osirisdeck.com` purchased; Ryan to connect later
+- [x] Custom domain: `osirisdeck.com` DNS and HTTPS verified (redirects to www)
 
 ## Phase 1: product foundation (partner: UI/UX)
 
@@ -40,7 +40,7 @@ Mapping from today's code: a **template** is what is hard-coded now (`content.js
 
 - Verified auth with server-managed admin access for the two founders; individual project ownership first, company memberships and collaborator roles after MVP validation
 - Accounts own Templates and Projects; projects move from `localStorage` to a secure database (e.g. Postgres via Supabase with row-level security), with an import path for existing `.json` draft exports
-- Publish to client: hosted microsites at `<domain>/<organisation>/<consultant>/<client-project>` instead of copy-paste HTML, with per-link expiry and optional passcode
+- Publish to client: hosted microsites at `<domain>/<organisation>/<project-name>` instead of copy-paste HTML, with per-link expiry and optional passcode
 - Survey responses stored in Osiris (Apps Script stays as an optional export to Google Sheets)
 
 ## Phase 3: analytics (partner: user-facing analytics)

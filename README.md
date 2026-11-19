@@ -20,11 +20,11 @@ Open the local server URL, or open `prototype/dist/index.html` directly after bu
 ## Deploy and share
 
 - Repository: [Ryanx-ai/Osiris](https://github.com/Ryanx-ai/Osiris), production branch `main`.
-- Live prototype: [osiris-pangea6.vercel.app](https://osiris-pangea6.vercel.app).
+- Live prototype: [osirisdeck.com](https://osirisdeck.com); [Vercel alias](https://osiris-pangea6.vercel.app).
 - Vercel: project `osiris`, team `Pangea` (`pangea6`), Root Directory `prototype`.
 - Build: `node scripts/build.mjs --public`; output: `dist`; framework: Other; Node.js 22.
-- Domain: **osirisdeck.com**, purchased. Ryan will connect DNS separately. Keep the production `vercel.app` alias available alongside it.
-- Client URL shape: `https://osirisdeck.com/vertical-institute/consultant-name/client-companya`.
+- Domain: **osirisdeck.com**, DNS and HTTPS verified; currently redirects to **www.osirisdeck.com**. The production `vercel.app` alias remains available.
+- Client URL shape: `https://osirisdeck.com/vertical-institute/project-name`.
 
 The same path works on the production Vercel hostname. [Manual publishing instructions](prototype/published/README.md) explain how to deploy an exported recipient page without changing the builder. Unknown paths return 404; they do not expose the editor. Publishing is currently a reviewed file + Git push, not an in-app button. The public GitHub repository and static published pages must contain only material approved for public access. `noindex` is not access control.
 

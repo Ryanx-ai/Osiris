@@ -117,4 +117,4 @@ Licence: none yet (all rights reserved).
 
 ## OSIRIS integration — 19 November 2026
 
-See [developer notes](../devnotes.md) for current scope. The source layout and core runtime are preserved. The public build additionally copies reviewed recipient exports from [`published/`](published/README.md) to `/{organisation}/{consultant}/{client-project}`. Run `npm test` for publication-path checks. Brand Studio, Deck Builder redesign, authentication and analytics are planned; collaborator access follows MVP validation.
+See [developer notes](../devnotes.md) for current scope. The source layout and core runtime are preserved. The public build additionally copies reviewed recipient exports from [`published/`](published/README.md) to `/{organisation}/{project-name}`. Run `npm test` for publication-path checks. Brand Studio, Deck Builder redesign, authentication and analytics are planned; collaborator access follows MVP validation.

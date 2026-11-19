@@ -4,7 +4,7 @@
 
 **Purpose:** a purpose-built interactive proposal builder for small teams and companies, beginning with personal usage.
 
-The prototype is now imported under `prototype/`. The current release scope and phased plan are in [devnotes.md](devnotes.md), which takes precedence over older proposals here. Today preserves the prototype structure and deploys it; authentication, analytics, Brand Studio, Deck Builder redesign and the website remain upcoming work. MVP: individual users create projects supporting presentations and proposals. Company workspaces and collaborators follow only after MVP validation. Production domain: `osirisdeck.com`; client routes: `/{organisation}/{consultant}/{client-project}`. Earlier concept artwork was removed; textual design research remains historical input, not an approved new visual direction.
+The prototype is now imported under `prototype/`. The current release scope and phased plan are in [devnotes.md](devnotes.md), which takes precedence over older proposals here. Today preserves the prototype structure and deploys it; authentication, analytics, Brand Studio, Deck Builder redesign and the website remain upcoming work. MVP: individual users create projects supporting presentations and proposals. Company workspaces and collaborators follow only after MVP validation. Production domain: `osirisdeck.com`; client routes: `/{organisation}/{project-name}`. Earlier concept artwork was removed; textual design research remains historical input, not an approved new visual direction.
 
 ## 1. Product direction
 
@@ -200,7 +200,7 @@ The fictional Apple example uses 24 participants at S$300 plus a S$1,200 program
 
 - Publishing creates a fixed revision; copying a link is a separate action. Neither sends a message or creates a client response.
 - The sample access choice is “Anyone with the link”, with a visible expiry. Explain that this link can be forwarded. Verified-recipient access remains a separate decision for confidential use.
-- The visual's `osiris.example/p/apple-v1` is a reserved-domain mock URL. The current URL contract uses company/consultant/client-project slugs. Private publications will require access controls independently of those readable slugs.
+- The visual's `osiris.example/p/apple-v1` is a reserved-domain mock URL. The current URL contract uses organisation/project-name slugs. Private publications will require access controls independently of those readable slugs.
 - After copying, show “Link copied” only when clipboard writing succeeds. If blocked, retain a selectable URL and manual-copy guidance.
 - “Open client view” opens the published version, while author preview may contain unsaved scenario exploration. Keep the distinction explicit.
 - Closing and reopening the share dialog preserves link settings. Expiry changes and revocation affect access, never rewrite the revision's commercial content.

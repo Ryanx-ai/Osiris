@@ -5,6 +5,7 @@
 (() => {
 'use strict';
 const $ = id => document.getElementById(id);
+const OSIRIS_HEAD = '<title>Osiris - VI</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,@@b64:assets/favicon.svg@@">';
 const DRAFTS_KEY = 'vi-proposal-drafts-v4';
 const LEGACY_KEY = 'vi-proposal-deck-v3';
 const ME_KEY = 'vi-consultant-v1';
@@ -1610,7 +1611,7 @@ function buildHostedHtml(state, mode){
   return [
     '<!doctype html>', '<html lang="en">', '<head>', '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">',
-    '<title>' + esc(meta.title) + ' · Vertical Institute</title>',
+    OSIRIS_HEAD,
     '<style>' + scriptText('vi-hosted-css') + '</style>', '</head>',
     '<body class="vi-host">',
     '<div class="app" id="app"><p class="boot">Loading the proposal…</p></div>',
@@ -1857,7 +1858,7 @@ function calcConfigLegacy(state){
 function buildCalcOnlyHtml(state){
   const cfg = calcConfig(state, false), close = '<' + '/script>';
   return '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-    + '<title>Corporate Training Calculator' + (cfg.client ? ' · ' + esc(cfg.client) : '') + '</title>\n'
+    + OSIRIS_HEAD + '\n'
     + '<script>(function(){var d=document.documentElement;try{if(window.self===window.top)return;}catch(e){}d.setAttribute("data-theme","light");d.classList.add("is-embedded");})();' + close + '\n'
     + '<style id="vi-font-css">' + latoFontCss() + '</style>\n'
     + '<style id="app-css">' + scriptText('vi-calc-css') + '</style>\n</head>\n<body>\n'
@@ -1882,7 +1883,7 @@ function buildSiteHtml(state, mode, opts){
   const out = [
     '<!doctype html>', '<html lang="en">', '<head>', '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">',
-    '<title>' + esc((cfg.only ? 'Pre-training survey: ' : '') + meta.title) + ' · Vertical Institute</title>',
+    OSIRIS_HEAD,
     '<style id="site-css">' + scriptText('vi-site-css') + '</style>', '</head>', '<body>',
     '<div class="site" id="site"><p class="site-boot">Loading…</p></div>',
     '<noscript><p style="padding:16px;font-family:sans-serif">This page needs JavaScript. Please ask ' + esc(ctx.consultant.name) + ' (' + esc(ctx.consultant.email) + ') for the PDF version.</p></noscript>',
