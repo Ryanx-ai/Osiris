@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>VI Client Microsite Builder v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400&family=Merriweather:wght@900&display=swap">
+<style>@@file:src/styles/builder.css@@</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="app-head">
+    <div class="head-text">
+      <p class="eyebrow">Vertical Institute · Client microsite</p>
+      <h1>VI Client Microsite Builder <span class="v-badge">v2</span></h1>
+      <p class="lede">Enter the client brief once. It fills the proposal deck, the fee and SFEC calculator, the team scoping survey, the enrolment Excel file and your contact page, then exports them as one microsite to paste into Google Sites. The PDF, PowerPoint and single-part exports are still here.</p>
+    </div>
+    <div class="drafts" role="group" aria-label="Drafts">
+      <label class="f drafts-pick" for="draft-sel"><span>Draft <em id="draft-saved" class="saved-note"></em></span><select id="draft-sel"></select></label>
+      <div class="drafts-acts">
+        <button type="button" class="btn" id="draft-new" title="Start a blank proposal. Your other drafts stay saved.">+ New</button>
+        <button type="button" class="btn" id="draft-dup" title="Copy this draft, for a similar client">Duplicate</button>
+        <button type="button" class="btn" id="draft-xfer" title="Send this draft to the Proposal Deck Creator, or bring one in from it">Transfer ⇄</button>
+        <details class="menu-btn" id="draft-more">
+          <summary class="btn" aria-label="More draft actions">More ▾</summary>
+          <div class="menu-pop">
+            <button type="button" id="draft-rename">Rename this draft…<small>The name only appears in this list</small></button>
+            <button type="button" id="draft-export">Export draft (.json)<small>Back it up or move it to another computer</small></button>
+            <button type="button" id="draft-import">Import draft (.json)<small>Adds it as a new draft</small></button>
+            <button type="button" id="draft-xfer2">Transfer to or from the Proposal Deck Creator…<small>Copy here, paste there</small></button>
+            <button type="button" id="draft-example">Open the example draft<small>A filled-in demo you can explore</small></button>
+            <button type="button" id="draft-delete" class="danger">Delete this draft</button>
+          </div>
+        </details>
+        <input type="file" id="draft-file" accept=".json,application/json" hidden>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mtabs" id="mtabs" aria-label="Builder view">
+    <button type="button" data-tab="edit" aria-pressed="true">Edit details</button>
+    <button type="button" data-tab="preview" aria-pressed="false">Preview &amp; send <span id="mtab-flag"></span></button>
+  </nav>
+
+  <div class="bench" id="bench" data-tab="edit">
+    <form class="brief" id="brief" autocomplete="off" aria-label="Proposal details">
+      <section class="group" aria-labelledby="g-client">
+        <h2 id="g-client">Client</h2>
+        <label class="f" for="client"><span>Company name</span><input type="text" id="client" placeholder="Company the proposal is for"></label>
+        <label class="f" for="uen" id="uen-wrap"><span>UEN <em>(optional; shown in the calculator and the confirm form)</em></span><input type="text" id="uen" autocomplete="off" spellcheck="false" placeholder="e.g. 201812345K"></label>
+        <div class="row2">
+          <label class="f" for="contact"><span>Contact <em>(optional)</em></span><input type="text" id="contact" placeholder="e.g. Mary Ong"></label>
+          <label class="f" for="team"><span>Default team <em>(optional)</em></span><input type="text" id="team" placeholder="e.g. project team"></label>
+        </div>
+        <label class="f" for="industry"><span>Industry</span><select id="industry"></select></label>
+      </section>
+
+      <section class="group" aria-labelledby="g-prog">
+        <h2 id="g-prog">Programme &amp; Courses</h2>
+        <div class="f" id="multi-mode-wrap" hidden>
+          <span id="multi-mode-lab">How multiple courses are structured</span>
+          <div class="seg" id="multi-mode" role="group" aria-labelledby="multi-mode-lab">
+            <button type="button" data-v="pathway" aria-pressed="true">Capability pathway</button>
+            <button type="button" data-v="standalone" aria-pressed="false">Standalone (by function)</button>
+          </div>
+          <div class="pp" id="path-plot" hidden>
+            <div class="pp-head"><button type="button" class="btn" id="pp-open">Plot the pathway…</button><span class="pp-mode" id="pp-mode"></span><button type="button" class="pp-reset" id="pp-reset" hidden>Reset to automatic</button></div>
+            <p class="note">Move the course blocks to set which course follows which, for example two tracks of three. Left alone, the pathway is drawn from <b>Team being trained</b>: a team named on several courses becomes one path.</p>
+          </div>
+        </div>
+        <div class="course-list" id="course-list"></div>
+        <button type="button" class="btn btn-add-course" id="add-course">+ Add another course</button>
+        <p class="note" id="course-cap-note" hidden>Six courses is the most one deck lays out well. Split larger programmes into two proposals.</p>
+
+        <div class="f"><span id="sched-lab">Schedule</span>
+          <div class="seg" id="schedule" role="group" aria-labelledby="sched-lab">
+            <button type="button" data-v="weekday" aria-pressed="true">Weekdays</button>
+            <button type="button" data-v="weekend" aria-pressed="false">Weekends</button>
+          </div>
+        </div>
+        <div class="row2">
+          <label class="f" for="schedStart"><span>Classes start</span><select id="schedStart"></select></label>
+          <label class="f" for="schedEnd"><span>Latest finish</span><select id="schedEnd"></select></label>
+        </div>
+        <div class="row2">
+          <label class="f" for="schedLunch"><span>Lunch break</span><select id="schedLunch"><option value="auto">Auto: days of 5.5h or more</option><option value="include">Every day</option><option value="skip">No lunch break</option></select></label>
+          <label class="f" for="schedMax"><span>Longest day</span><select id="schedMax"></select></label>
+        </div>
+        <p class="note">Class hours for the training schedule on the Delivery slide. Each day’s training, assessment and lunch must fit within them.</p>
+        <label class="check" for="exact-makeup"><input type="checkbox" id="exact-makeup"><span>Include exact cohort makeup<small id="exact-makeup-note">Split each course's participants by funding tier (50% / 70% / pass holders)</small></span></label>
+        <p class="note" id="pax-note" hidden></p>
+      </section>
+
+      <section class="group" aria-labelledby="g-lessons">
+        <h2 id="g-lessons">Lesson detail slides</h2>
+        <label class="check" for="details-on"><input type="checkbox" id="details-on"><span>A slide for each lesson<small>Opened from its row on the course slide, or from a course’s Lessons button on the pathway. Same content as the Consultation Deck Creator’s module slides</small></span></label>
+        <div class="f" id="level-wrap"><span id="level-lab">Detail level <em>(preview and PowerPoint)</em></span>
+          <div class="seg seg3" id="detail-level" role="group" aria-labelledby="level-lab">
+            <button type="button" data-v="simple" aria-pressed="false">Simple</button>
+            <button type="button" data-v="detailed" aria-pressed="true">Detailed</button>
+            <button type="button" data-v="technical" aria-pressed="false">Technical</button>
+          </div>
+        </div>
+        <p class="note" id="level-note"></p>
+        <label class="check" for="details-pdf"><input type="checkbox" id="details-pdf"><span>Include them in the PDF<small>As pages after the main slides, with working links both ways. In PowerPoint they are hidden slides that open from their buttons</small></span></label>
+        <details class="adv" id="apps-wrap">
+          <summary>Their own example for each lesson</summary>
+          <div class="apps-list" id="apps-list"></div>
+          <p class="note">Replaces the illustrative workplace application on that lesson’s slide, under “At ” and the company name.</p>
+        </details>
+      </section>
+
+      <section class="group" aria-labelledby="g-fund">
+        <h2 id="g-fund">Funding &amp; SFEC</h2>
+        <div class="f">
+          <span id="sfec-mode-lab">SFEC scheme <em>(set by the training dates)</em></span>
+          <div class="seg" id="sfec-mode" role="group" aria-labelledby="sfec-mode-lab">
+            <button type="button" data-v="legacy" aria-pressed="false">Current SFEC<br><small>claimed back · until 30 Nov 2026</small></button>
+            <button type="button" data-v="enhanced" aria-pressed="true">Redesigned SFEC<br><small>offset upfront · from 1 Dec 2026</small></button>
+          </div>
+        </div>
+        <p class="sfec-hint" id="sfec-hint" hidden></p>
+        <p class="note" id="sfec-mode-note"></p>
+        <label class="f" for="tier"><span>Course fee funding</span><select id="tier">
+          <option value="70">70% for every Citizen and PR</option>
+          <option value="50">50% baseline, 70% for Citizens aged 40+</option>
+          <option value="unknown">Not checked yet: show 50% and 70%</option>
+        </select></label>
+        <label class="check" for="pass"><input type="checkbox" id="pass"><span>Include pass holders<small id="pass-sub-note">EP, S Pass and Work Permit holders: no course-fee funding or Absentee Payroll. The current SFEC (claimed back) covers their nett fee; the redesigned SFEC does not</small></span></label>
+        <div class="row2" id="sfec-row">
+          <label class="f" for="sfec"><span>SFEC availability</span><select id="sfec">
+            <option value="unknown">Balance not confirmed</option>
+            <option value="known">Balance confirmed</option>
+            <option value="none">No SFEC available</option>
+          </select></label>
+          <label class="f" for="sfecBal" id="bal-wrap"><span>SFEC balance</span>
+            <span class="money"><span aria-hidden="true">S$</span><input type="text" id="sfecBal" inputmode="decimal" placeholder="10,000"></span>
+          </label>
+        </div>
+        <label class="check" for="multi-uen" id="multi-uen-wrap"><input type="checkbox" id="multi-uen"><span>Multiple sponsoring entities (UENs)<small>One calculator slide with an entity selector. Each entity uses its own SFEC balance and keeps its own figures; the PDF prints a page per entity</small></span></label>
+        <div class="uen-panel" id="uen-panel" hidden>
+          <div class="uen-list" id="uen-list"></div>
+          <button type="button" class="btn btn-add-course" id="add-uen">+ Add another entity</button>
+          <p class="note" id="uen-summary-note"></p>
+        </div>
+        <details class="adv" id="assumptions">
+          <summary>Assumptions</summary>
+          <label class="f" for="sfecRate"><span>Redesigned SFEC: share of the nett course fee it covers <em>(%)</em></span><input type="number" id="sfecRate" min="1" max="100" step="1" placeholder="100"></label>
+          <p class="note">Applies to the redesigned SFEC only (from 1 Dec 2026); the current SFEC stays at 90%. Change it if SWDA’s guidance for a course differs. Rules last checked <b id="rules-checked"></b>.</p>
+        </details>
+        <details class="adv" id="calc-opts">
+          <summary>Calculator tab (client microsite)</summary>
+          <p class="note" id="calc-bind-note"></p>
+          <div class="f"><span id="co-menu-lab">Courses the client can pick from</span>
+            <div class="seg seg3" id="co-menu" role="group" aria-labelledby="co-menu-lab">
+              <button type="button" data-v="all" aria-pressed="true">All 24 courses</button>
+              <button type="button" data-v="proposal" aria-pressed="false">Proposed only</button>
+              <button type="button" data-v="plus" aria-pressed="false">Proposed + a few others</button>
+            </div>
+            <p class="note" id="co-menu-note"></p>
+          </div>
+          <label class="check" for="co-start"><input type="checkbox" id="co-start"><span>Open with this proposal’s courses and headcount<small>The client’s Reset to proposed baseline button returns to them</small></span></label>
+          <label class="check" for="co-pass"><input type="checkbox" id="co-pass"><span>Pass holder row<small>Lets the client add EP, S Pass and Work Permit holders. Always shown when the proposal has some</small></span></label>
+          <label class="check" for="co-reimb"><input type="checkbox" id="co-reimb"><span>Claims after the course<small>Absentee Payroll and the rows below, in a panel the client can open</small></span></label>
+          <label class="check" for="co-eis"><input type="checkbox" id="co-eis"><span>EIS row</span></label>
+          <label class="check" for="co-gst"><input type="checkbox" id="co-gst"><span>GST claimable row</span></label>
+          <label class="check" for="co-save"><input type="checkbox" id="co-save"><span>Save as PNG or PDF<small>The calculator fetches its export tool from the internet when the client presses it</small></span></label>
+        </details>
+      </section>
+
+      <section class="group" aria-labelledby="g-call">
+        <div class="group-head-row"><h2 id="g-call">From the call</h2><button type="button" class="btn btn-notes" id="notes-open" hidden><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.8l1.5 3.9 3.9 1.5-3.9 1.5L8 12.6 6.5 8.7 2.6 7.2l3.9-1.5L8 1.8Z" fill="currentColor"/><path d="M13 11l.6 1.4L15 13l-1.4.6L13 15l-.6-1.4L11 13l1.4-.6L13 11Z" fill="currentColor"/></svg>Draft from call notes</button></div>
+        <label class="f" for="priority"><span>Their priority, in a phrase <em>(optional)</em></span><input type="text" id="priority" placeholder="e.g. faster tender documentation"></label>
+        <div class="row2">
+          <label class="f" for="decision"><span>Ask for approval by</span><input type="date" id="decision"></label>
+          <label class="f" for="date"><span>Proposal date</span><input type="date" id="date"></label>
+        </div>
+        <div class="f" id="pains-wrap">
+          <span>What their teams told you <em>(up to 5)</em></span>
+          <p class="note">Each point leads “Why this matters” with its team and tools, or the Other courses slide when another course answers it. The first two also go into the executive summary.</p>
+          <div class="pain-list" id="pain-list"></div>
+          <button type="button" class="btn btn-add-course" id="add-pain">+ Add a point from the call</button>
+        </div>
+        <label class="f" for="heard"><span>Executive summary: what you heard <em>(optional)</em></span><textarea id="heard" class="ta" rows="2" maxlength="420" placeholder="Left blank, it is built from the first two points"></textarea></label>
+        <details class="adv" id="focus-wrap">
+          <summary>Curriculum focus (course slide)</summary>
+          <div class="f"><span>Lessons that get the most practice time</span><div class="pick-list" id="focus-mods" style="max-height:none"></div></div>
+          <label class="f" for="focus-notes"><span>Client notes per lesson <em>(one per line: 2 | note)</em></span><textarea id="focus-notes" rows="6" style="width:100%;font:inherit;font-size:12.5px;font-weight:400;border:1px solid var(--line);border-radius:8px;padding:7px 9px;background:var(--surface);color:var(--ink)" placeholder="2 | Basic: conversation-style prompting and output quality"></textarea></label>
+          <p class="note">A note replaces that lesson’s catalogue description on the course slide. Single-course decks only; accreditation still fixes every lesson’s outcomes and the assessment.</p>
+        </details>
+        <details class="adv" id="practice-wrap">
+          <summary>Teams and tools (In practice slide)</summary>
+          <label class="f" for="practice-rows"><span>One per line: Team | Tools | What they practise <em>(up to 5)</em></span><textarea id="practice-rows" rows="5" style="width:100%;font:inherit;font-size:12.5px;font-weight:400;border:1px solid var(--line);border-radius:8px;padding:7px 9px;background:var(--surface);color:var(--ink)" placeholder="Finance | Xero | Draft month-end commentary from anonymised report exports"></textarea></label>
+          <p class="note">Replaces the industry examples on the In practice slide. Leave empty to use the industry examples.</p>
+        </details>
+      </section>
+
+      <section class="group" aria-labelledby="g-slides">
+        <div class="group-head-row">
+          <h2 id="g-slides">Slides in this deck</h2>
+          <button type="button" class="link-btn" id="restore-all-slides" hidden>Restore all</button>
+        </div>
+        <p class="note">Click <b>✕</b> at the top right of any slide, or untick it below. The remaining slides and the Contents page renumber automatically.</p>
+        <label class="check" for="sl-contents"><input type="checkbox" id="sl-contents"><span>Contents page<small>Each entry jumps to its slide, and every slide has a button back</small></span></label>
+        <label class="check" for="sl-timeline"><input type="checkbox" id="sl-timeline"><span>Training timeline<small id="timeline-note">Approval, pilot cohort and follow-on courses on one schedule</small></span></label>
+        <label class="check" for="sl-cohort"><input type="checkbox" id="sl-cohort"><span>Cohort investment &amp; calculator<small id="cohort-note">Upfront payment, net cost and what is claimed back</small></span></label>
+        <label class="check" for="sl-compare"><input type="checkbox" id="sl-compare"><span>How this compares to the current SFEC scheme<small id="compare-note">Explains the redesigned SFEC and puts this cohort's numbers under both schemes</small></span></label>
+        <label class="f" for="cmp-focus" id="cmp-focus-wrap" style="margin:-2px 0 2px 26px"><span>Compare on that slide</span><select id="cmp-focus"></select></label>
+        <label class="check" for="sl-trust"><input type="checkbox" id="sl-trust"><span>Why Vertical Institute<small>Track record, with one or two success stories</small></span></label>
+        <details class="pick" id="cpick">
+          <summary id="cpick-sum">Choose the success stories</summary>
+          <div class="pick-list" id="cpick-list"></div>
+          <div class="pick-foot"><span id="cpick-count"></span><button type="button" class="link-btn" id="cpick-auto">Use suggested</button></div>
+          <div class="cs-list" id="cs-list"></div>
+          <button type="button" class="btn btn-add-course" id="cs-open">+ Add your own success story</button>
+          <div class="sub cs-form" id="cs-form" hidden>
+            <label class="f" for="cs-name"><span>Client name</span><input type="text" id="cs-name" maxlength="60" autocomplete="off"></label>
+            <label class="f" for="cs-sector"><span>Sector (optional)</span><input type="text" id="cs-sector" maxlength="36" autocomplete="off" placeholder="e.g. Logistics"></label>
+            <label class="f" for="cs-url"><span>Link to the full case study (optional)</span><input type="text" id="cs-url" maxlength="300" autocomplete="off" placeholder="https://"></label>
+            <label class="f" for="cs-what"><span>What we did</span><textarea id="cs-what" rows="3" maxlength="280"></textarea></label>
+            <label class="f" for="cs-why"><span>Why it is relevant (optional)</span><textarea id="cs-why" rows="2" maxlength="200"></textarea></label>
+            <label class="f" for="cs-quote"><span>Client quote (optional)</span><textarea id="cs-quote" rows="3" maxlength="340"></textarea></label>
+            <label class="f" for="cs-who"><span>Quote attribution (optional)</span><input type="text" id="cs-who" maxlength="90" autocomplete="off" placeholder="Name and title, or the client name"></label>
+            <div class="cs-acts"><span id="cs-msg" class="saved-note"></span><span><button type="button" class="link-btn" id="cs-cancel">Cancel</button> <button type="button" class="btn btn-primary" id="cs-save">Save story</button></span></div>
+          </div>
+        </details>
+        <label class="check" for="sl-others"><input type="checkbox" id="sl-others"><span>Other courses you can consider<small>Six courses picked for the industry, each showing who it suits, with a hover overview in the web deck</small></span></label>
+        <details class="pick" id="pick">
+          <summary id="pick-sum">Choose the six yourself</summary>
+          <div class="pick-list" id="pick-list"></div>
+          <div class="pick-foot"><span id="pick-count"></span><button type="button" class="link-btn" id="pick-auto">Use suggested</button></div>
+        </details>
+        <label class="check" for="sl-catalogue"><input type="checkbox" id="sl-catalogue"><span>Full course list<small>All 24 programmes on a detail slide, opened from Other courses</small></span></label>
+        <label class="check" for="icon-tile"><input type="checkbox" id="icon-tile"><span>White tile behind course icons<small>Off by default, so the icons sit directly on the card</small></span></label>
+        <div class="f" style="margin-top:4px">
+          <div class="group-head-row"><span>All generated slides</span><button type="button" class="link-btn" id="reset-order" hidden>Reset order</button></div>
+          <p class="note">Drag a slide, or use <b>↑</b> <b>↓</b>, to change the order; untick it to remove it. The cover stays first.</p>
+          <div class="slide-mgr-list" id="slide-mgr-list"></div>
+        </div>
+      </section>
+
+      <section class="group" aria-labelledby="g-site">
+        <h2 id="g-site">Client microsite</h2>
+        <p class="note">The Google Sites export is one page with a tab bar. The proposal deck is always in it; tick what else the client gets. The team scoping form can also be exported as a page of its own.</p>
+        <label class="check" for="st-calc"><input type="checkbox" id="st-calc"><span>Interactive calculator<small id="st-calc-note"></small></span></label>
+        <label class="check" for="st-scope"><input type="checkbox" id="st-scope"><span>Team scoping form<small id="st-scope-note"></small></span></label>
+        <label class="check" for="st-enrol"><input type="checkbox" id="st-enrol"><span>Enrol<small>The client downloads your Company Sponsored Learners Excel file with a row per planned participant. No names, NRIC or phone numbers are typed on the page</small></span></label>
+        <div class="xlsx-row"><select id="xlsx-ent" aria-label="Sponsoring entity for the Excel file" hidden></select><button type="button" class="btn" id="dl-xlsx"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the enrolment Excel</button></div>
+        <label class="check" for="st-contact"><input type="checkbox" id="st-contact"><span>Contact<small>WhatsApp, email, Gmail, call and save-contact buttons with your details</small></span></label>
+        <label class="check" for="st-coach"><input type="checkbox" id="st-coach"><span>Guided tour <span class="exp-pill">Experimental</span><small>Coach marks walk a first-time visitor through the tabs, and a Guide button replays them. Press Guide in the Forms &amp; contact preview to see it</small></span></label>
+        <details class="adv" id="site-forms" open>
+          <summary>Where survey responses are sent</summary>
+          <label class="f" for="hook-url"><span>Google Sheet link <em>(Apps Script web app URL)</em></span><input type="url" id="hook-url" autocomplete="off" spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec"></label>
+          <p class="note" id="hook-note"></p>
+          <button type="button" class="btn" id="hook-help">Set up the Google Sheet</button>
+          <label class="f" for="enrol-url" style="margin-top:8px"><span>Your standard enrolment form <em>(optional link, offered on Enrol)</em></span><input type="url" id="enrol-url" autocomplete="off" spellcheck="false" placeholder="https://"></label>
+        </details>
+        <details class="adv" id="site-contact">
+          <summary>Contact buttons</summary>
+          <label class="f" for="wa-num"><span>WhatsApp number <em>(blank uses your mobile from Your details)</em></span><input type="tel" id="wa-num" autocomplete="off"></label>
+          <label class="check" for="wa-msg" style="margin-top:8px"><input type="checkbox" id="wa-msg"><span>Open WhatsApp and email with a message filled in<small id="wa-msg-note"></small></span></label>
+        </details>
+        <p class="note">The Sheet link and contact settings are saved on this computer and used in every draft, like your details below.</p>
+      </section>
+
+      <section class="group" aria-labelledby="g-me">
+        <details class="adv" id="me-wrap">
+          <summary id="g-me">Your details (cover and Next Steps slides)</summary>
+          <div class="consultant-grid">
+            <label class="f" for="me-name"><span>Name</span><input type="text" id="me-name" data-me="name"></label>
+            <label class="f" for="me-title"><span>Job title</span><input type="text" id="me-title" data-me="title"></label>
+            <label class="f" for="me-email"><span>Email</span><input type="email" id="me-email" data-me="email"></label>
+            <label class="f" for="me-phones"><span>Phone numbers</span><input type="tel" id="me-phones" data-me="phones"></label>
+            <label class="f" for="me-org"><span>Organisation</span><input type="text" id="me-org" data-me="org"></label>
+            <label class="f" for="me-web"><span>Website</span><input type="text" id="me-web" data-me="web"></label>
+          </div>
+          <p class="note">Saved on this computer and used in every draft. <button type="button" class="link-btn" id="me-reset">Reset to the defaults</button></p>
+        </details>
+      </section>
+    </form>
+
+    <section class="deck" aria-labelledby="deck-h">
+      <div class="deck-bar">
+        <div class="deck-title"><b id="deck-h">Proposal deck</b><span id="deck-sub"></span></div>
+        <div class="dl">
+          <button type="button" class="btn btn-primary" id="dl-gsites"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2.5" width="12" height="11" rx="1.8" stroke="currentColor" stroke-width="1.5"/><path d="M2 6h12M6.5 6v7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Google Sites / website</button>
+          <button type="button" class="btn" id="preview-web"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5h7v7M12.5 3.5 6 10M3.5 6.5v6h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Preview microsite</button>
+          <button type="button" class="btn" id="dl-pdf"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>PDF</button>
+          <details class="menu-btn" id="pptx-menu">
+            <summary class="btn"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>PowerPoint ▾</summary>
+            <div class="menu-pop">
+              <button type="button" data-pptx="0">Slides only<small id="pptx-size-0">Picture slides, smallest file</small></button>
+              <button type="button" data-pptx="1">With clickable calculator<small id="pptx-size-1">Hidden slides keep the selectors working</small></button>
+            </div>
+          </details>
+        </div>
+        <div class="view-row">
+          <div class="seg seg3" id="view-seg" role="group" aria-label="What to preview">
+            <button type="button" data-view="slides" aria-pressed="true">Proposal slides</button>
+            <button type="button" data-view="calc" aria-pressed="false">Calculator</button>
+            <button type="button" data-view="forms" aria-pressed="false">Forms &amp; contact</button>
+          </div>
+        </div>
+        <p class="status" id="status" role="status"></p>
+      </div>
+      <div id="view-site" hidden>
+        <div class="site-prev-bar">
+          <p class="note">The client’s microsite, live from this draft. Nothing here is sent anywhere, and the proposal deck is left out to keep it quick.</p>
+          <span class="site-prev-acts" role="group" aria-label="Preview size"><button type="button" class="btn" data-psize="desk" aria-pressed="true">Desktop</button><button type="button" class="btn" data-psize="phone" aria-pressed="false">Phone</button></span>
+        </div>
+        <p class="site-prev-off" id="site-prev-off" hidden></p>
+        <div class="site-prev-host" id="site-prev-host"><iframe id="site-frame" title="Client microsite preview" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-downloads allow-same-origin"></iframe></div>
+      </div>
+      <div id="view-slides">
+      <section class="check-card" id="check" aria-labelledby="check-h">
+        <div class="check-head"><h2 id="check-h">Before you send</h2><span class="check-sum" id="check-sum"></span></div>
+        <ul class="check-list" id="check-list"></ul>
+        <button type="button" class="link-btn check-more" id="check-more" hidden></button>
+      </section>
+      <nav class="chips" id="chips" aria-label="Slides in this deck"></nav>
+      <div class="removed-bar" id="removed-bar" hidden></div>
+      <div class="slides" id="slides"></div>
+      <section class="details-block" id="details-block" hidden>
+        <div class="details-head">
+          <div><h2>Detail slides</h2><p class="note" id="details-note"></p></div>
+          <button type="button" class="btn" id="details-toggle" aria-expanded="false">Show detail slides</button>
+        </div>
+        <div class="detail-grid" id="detail-grid" hidden></div>
+      </section>
+      </div>
+      <p class="foot" id="foot"></p>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="pp-modal" hidden role="dialog" aria-modal="true" aria-labelledby="pp-title">
+    <div class="modal modal-lg">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Slide 5 · Proposed pathway</p>
+          <h2 id="pp-title">Plot the pathway</h2>
+        </div>
+        <button type="button" class="modal-close" id="pp-close" aria-label="Close dialog">✕</button>
+      </div>
+      <p class="note">Drag a course onto the course it follows. Drop it on any empty space to start a new track. Courses that follow the same course branch from it, and a course you move takes the courses after it along. You can also select a block and use the menu below the board.</p>
+      <div class="pp-board" id="pp-board"></div>
+      <div class="pp-tools" id="pp-tools" hidden></div>
+      <div class="pp-view" id="pp-view" aria-label="The pathway slide as it now stands"></div>
+      <div class="modal-acts"><button type="button" class="btn" id="pp-reset2">Reset to automatic</button><button type="button" class="btn btn-primary" id="pp-done">Done</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="xfer-modal" hidden role="dialog" aria-modal="true" aria-labelledby="xfer-title">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Drafts · Microsite Builder ⇄ Proposal Deck Creator</p>
+          <h2 id="xfer-title">Move a draft between the two tools</h2>
+        </div>
+        <button type="button" class="modal-close" id="xfer-close" aria-label="Close dialog">✕</button>
+      </div>
+      <p class="note">The two tools are separate pages, and each keeps its own drafts in this browser, so a draft travels by copy and paste. It carries everything: the proposal, the microsite settings and the slide order. A draft that comes back updates its own copy.</p>
+      <section class="xfer-part" aria-labelledby="xfer-send-h">
+        <h3 id="xfer-send-h">Send “<span id="xfer-name"></span>” to the Proposal Deck Creator</h3>
+        <div class="xfer-row">
+          <button type="button" class="btn btn-primary" id="xfer-copy">Copy this draft</button>
+          <a class="btn" id="xfer-open" href="https://claude.ai/artifact/EFod6j5z5KLT3xyaAYdZ8r" target="_blank" rel="noopener noreferrer">Open the Proposal Deck Creator ↗</a>
+        </div>
+        <textarea id="xfer-out" class="ta" rows="3" readonly hidden aria-label="The draft as text, to copy"></textarea>
+        <p class="status" id="xfer-copy-status" role="status"></p>
+      </section>
+      <section class="xfer-part" aria-labelledby="xfer-in-h">
+        <h3 id="xfer-in-h">Bring in a draft from the Proposal Deck Creator</h3>
+        <label class="f" for="xfer-in"><span>Paste the copied draft here</span><textarea id="xfer-in" class="ta" rows="3" placeholder="Click here, then paste (Ctrl+V, or ⌘V on a Mac)"></textarea></label>
+        <div class="xfer-found" id="xfer-found" hidden></div>
+        <p class="status" id="xfer-in-status" role="status"></p>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="notes-modal" hidden role="dialog" aria-modal="true" aria-labelledby="notes-title">
+    <div class="modal modal-lg">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">From the call · Drafted by Claude</p>
+          <h2 id="notes-title">Draft the talking points from your notes</h2>
+        </div>
+        <button type="button" class="modal-close" id="notes-close" aria-label="Close dialog">✕</button>
+      </div>
+      <p class="note">Paste your call notes or a transcript, for example copied from Tactiq. Claude reads them against this proposal’s courses and lessons and suggests the points, tools and examples below. Nothing changes in the draft until you apply it, and every line stays editable.</p>
+      <label class="f" for="notes-text"><span>Notes or transcript</span><textarea id="notes-text" class="ta" rows="9" maxlength="60000" placeholder="e.g. Met Mr Tan (Finance HOD) and the HR and warehouse heads. Finance closes the month in Xero and AutoCount, and writes the commentary by hand…"></textarea></label>
+      <div class="notes-acts">
+        <span class="note" id="notes-count"></span>
+        <span><button type="button" class="btn" id="notes-stop" hidden>Stop</button> <button type="button" class="btn btn-primary" id="notes-run">Draft with Claude</button></span>
+      </div>
+      <p class="status" id="notes-status" role="status"></p>
+      <div class="notes-result" id="notes-result" hidden></div>
+      <div class="modal-acts" id="notes-apply-row" hidden>
+        <div class="modal-acts-left"><span class="note">Ticked parts replace what is in the draft now.</span></div>
+        <div class="modal-acts-right"><button type="button" class="btn" id="notes-cancel">Cancel</button><button type="button" class="btn btn-primary" id="notes-apply">Apply to this draft</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="gsites-modal" hidden role="dialog" aria-modal="true" aria-labelledby="gsites-title">
+    <div class="modal modal-lg">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Share online · Client microsite</p>
+          <h2 id="gsites-title">Put the client microsite on Google Sites</h2>
+        </div>
+        <button type="button" class="modal-close" id="gsites-close" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="f">
+        <span id="gsites-what-lab">What to export</span>
+        <div class="seg seg4" id="gsites-what" role="group" aria-labelledby="gsites-what-lab">
+          <button type="button" data-what="site" aria-pressed="true">Full microsite</button>
+          <button type="button" data-what="deck" aria-pressed="false">Proposal only</button>
+          <button type="button" data-what="calc" aria-pressed="false">Calculator only</button>
+          <button type="button" data-what="survey" aria-pressed="false">Survey only</button>
+        </div>
+        <p class="gs-what-note" id="gsites-what-note"></p>
+      </div>
+      <div class="f" id="gsites-mode-wrap">
+        <span id="gsites-mode-lab">Proposal deck layout</span>
+        <div class="seg" id="gsites-mode" role="group" aria-labelledby="gsites-mode-lab">
+          <button type="button" data-mode="player" aria-pressed="true">Slide player (fits any box)</button>
+          <button type="button" data-mode="scroll" aria-pressed="false">All slides on one scrolling page</button>
+        </div>
+      </div>
+      <div class="gs-cols">
+        <div class="gs-col">
+          <h3>A full page in Google Sites <span class="badge-rec">No resizing</span></h3>
+          <ol class="gs-steps">
+            <li>Click <b>Copy embed code</b> below.</li>
+            <li>In Google Sites, open the <b>Pages</b> tab, click <b>+</b> at the bottom and choose <b>Full page embed</b>. Name the page.</li>
+            <li>Click <b>Add embed</b>, choose <b>Embed code</b>, paste, then <b>Next</b> and <b>Insert</b>. Publish the site.</li>
+          </ol>
+          <p class="note">It fills the page and scales to each visitor's screen, so there is nothing to stretch. Phones get shorter tab names and the readable page version of the deck automatically.</p>
+        </div>
+        <div class="gs-col">
+          <h3>Inside an existing page</h3>
+          <ol class="gs-steps">
+            <li>Choose <b>Insert → Embed → Embed code</b>, paste and click <b>Insert</b>.</li>
+            <li>Google Sites decides the size of the embed box, and nothing inside the code can change it. Drag the box's corner once, to the width you want.</li>
+          </ol>
+          <p class="note">Whatever size the box ends up, the tab bar stays on top and each tab scrolls inside it, so there is never a second scroll bar. Give it at least 700 pixels of height for the calculator and forms.</p>
+        </div>
+      </div>
+      <p class="sfec-hint" style="margin:0">Google Sites keeps the copy you paste. After any change to this proposal, or to this builder, copy the code again and replace the old embed: select it in Google Sites, choose Edit, paste the new code and publish the site.</p>
+      <div class="gs-prev-bar">
+        <b style="font-size:12.5px">Preview here:</b>
+        <button type="button" class="btn" data-prev="box">In a 16:9 embed box</button>
+        <button type="button" class="btn" data-prev="small">In a small box</button>
+        <button type="button" class="btn" data-prev="phone">On a phone</button>
+        <button type="button" class="link-btn" data-prev="none" hidden>Hide preview</button>
+      </div>
+      <div class="gs-prev-host" id="gs-prev-host" hidden></div>
+      <div class="gs-code-wrap">
+        <div class="gs-code-head">
+          <span id="gsites-meta">Self-contained interactive HTML</span>
+          <button type="button" class="link-btn" id="gsites-select">Select all</button>
+        </div>
+        <textarea class="gs-code" id="gsites-code" readonly spellcheck="false" aria-label="Embed code for Google Sites"></textarea>
+      </div>
+      <p class="status" id="gsites-status" role="status"></p>
+      <div class="modal-acts">
+        <div class="modal-acts-left">
+          <button type="button" class="btn btn-primary" id="gsites-copy"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 5.5V3.8c0-.7-.6-1.3-1.3-1.3H3.8c-.7 0-1.3.6-1.3 1.3v5.4c0 .7.6 1.3 1.3 1.3H5.5" stroke="currentColor" stroke-width="1.5"/></svg>Copy embed code</button>
+          <button type="button" class="btn" id="gsites-copy-open"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5h7v7M12.5 3.5 6 10M3.5 6.5v6h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Copy &amp; open Google Sites</button>
+        </div>
+        <div class="modal-acts-right">
+          <button type="button" class="btn" id="gsites-dl-html"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Download .html</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="hook-modal" hidden role="dialog" aria-modal="true" aria-labelledby="hook-title">
+    <div class="modal modal-lg">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Client microsite · Forms</p>
+          <h2 id="hook-title">Send the team scoping survey to a Google Sheet</h2>
+        </div>
+        <button type="button" class="modal-close" id="hook-close" aria-label="Close dialog">✕</button>
+      </div>
+      <p class="note">The survey is part of the microsite, so participants never see a Google Form or a script warning. One Sheet can collect every client: each row names the client and the proposal.</p>
+      <ol class="hook-steps">
+        <li>Create or open the Google Sheet that should collect replies, then choose <b>Extensions → Apps Script</b>.</li>
+        <li>Press <b>Copy script</b> below and paste it over everything in <code>Code.gs</code>. Save.</li>
+        <li>Choose <b>Deploy → New deployment</b>, type <b>Web app</b>. Set <b>Execute as: Me</b> and <b>Who has access: Anyone</b>, then deploy and allow access when Google asks.</li>
+        <li>Copy the <b>Web app URL</b> (it ends in <code>/exec</code>) and paste it into <b>Google Sheet link</b> under Client microsite.</li>
+        <li>Export the microsite, publish it, and send one test from the published page. A <b>Pre-training survey</b> tab appears in the Sheet with the row.</li>
+      </ol>
+      <p class="sfec-hint" style="margin:0">A browser cannot read the Sheet’s reply from inside Google Sites, so the microsite shows “Thank you” once the request has left, and always gives the participant a copy to email or WhatsApp. The link is visible in the page’s code, so treat the Sheet as an inbox and keep anything sensitive elsewhere.</p>
+      <div class="gs-code-wrap">
+        <div class="gs-code-head"><span>Apps Script for the Sheet</span></div>
+        <textarea class="gs-code tall" id="hook-code" readonly spellcheck="false" aria-label="Apps Script for the Google Sheet"></textarea>
+      </div>
+      <p class="status" id="hook-status" role="status"></p>
+      <div class="modal-acts">
+        <div class="modal-acts-left"><button type="button" class="btn btn-primary" id="hook-copy">Copy script</button></div>
+        <div class="modal-acts-right"><button type="button" class="btn" id="hook-done">Done</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="gate-modal" hidden role="dialog" aria-modal="true" aria-labelledby="gate-title">
+    <div class="modal modal-sm">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Before you send</p>
+          <h2 id="gate-title">This deck still needs attention</h2>
+        </div>
+        <button type="button" class="modal-close" id="gate-close" aria-label="Close dialog">✕</button>
+      </div>
+      <ul class="check-list" id="gate-list"></ul>
+      <label class="check" for="gate-override"><input type="checkbox" id="gate-override"><span>Continue anyway<small>I have checked these points and the deck is right for this client</small></span></label>
+      <div class="modal-acts">
+        <div class="modal-acts-left"><button type="button" class="btn" id="gate-cancel">Back to editing</button></div>
+        <div class="modal-acts-right"><button type="button" class="btn btn-primary" id="gate-go" disabled>Continue</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="vi-fonts">@@file:src/js/fonts.js@@</script>
+<script id="vi-images">@@file:src/js/images.js@@</script>
+<script id="vi-content">@@file:src/js/content.js@@</script>
+<script id="vi-moddetail">@@file:src/js/moddetail.js@@</script>
+<script id="vi-engine">@@file:src/js/engine.js@@</script>
+<script id="vi-templates">@@file:src/js/templates.js@@</script>
+<script id="vi-runtime">@@file:src/js/runtime.js@@</script>
+<script type="text/plain" id="vi-hosted-css">@@file:src/embedded/hosted-deck/hosted.css@@</script>
+<script type="text/plain" id="vi-hosted-app">@@file:src/embedded/hosted-deck/hosted-app.js@@</script>
+<script type="text/plain" id="vi-calc-css">@@file:src/embedded/calculator/calc.css@@</script>
+<script type="text/plain" id="vi-calc-shell">@@file:src/embedded/calculator/calc-shell.html@@</script>
+<script type="text/plain" id="vi-calc-app">@@file:src/embedded/calculator/calc-app.js@@</script>
+<script type="text/plain" id="vi-site-css">@@file:src/embedded/microsite/site.css@@</script>
+<script type="text/plain" id="vi-site-app">@@file:src/embedded/microsite/site-app.js@@</script>
+<script type="text/plain" id="vi-apps-script">@@file:src/embedded/apps-script/Code.gs@@</script>
+<script id="vi-xlsx">@@file:src/js/xlsx.js@@</script>
+<script id="vi-ui">@@file:src/js/ui.js@@</script>
+</body>
+</html>

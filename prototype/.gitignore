@@ -1,0 +1,14 @@
+# Build output (Vercel rebuilds it)
+dist/
+
+# Real client data: never commit (PDPA). Kept only on your own machine.
+data/*.local.js
+data/*.local.json
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+node_modules/
+.vercel
+.env*

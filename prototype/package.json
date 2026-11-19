@@ -1,0 +1,13 @@
+{
+  "name": "osiris",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Osiris: client proposal microsite builder (proposal deck, funding calculator, scoping survey, enrolment and contact in one embeddable page).",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:public": "node scripts/build.mjs --public",
+    "dev": "node scripts/build.mjs && npx --yes serve dist -l 3000"
+  }
+}
