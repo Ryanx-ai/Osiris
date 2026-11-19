@@ -22,14 +22,17 @@ This is a design synthesis, not a claim that copying another product will improv
 ### Alternatives considered
 A dashboard-first KPI wall would be premature before real analytics exist. An infinite freeform design canvas would increase authoring freedom but risk the reliable layouts and funding output that make the current tool valuable. A giant settings form carries forward today's cognitive load. The chosen direction is a structured deck canvas with contextual editing: more visual control, while templates continue to constrain the output safely.
 
-## Author information architecture
-- **Dashboard:** resume recent work, start a project, surface drafts that need attention. Real project state only; no invented analytics.
-- **Brand Bank:** approved presentation and proposal templates, logos, colour/font rules and reusable sections. Brand Studio is the editing mode within this area, not another top-level destination.
-- **Project files:** grid/list, search, status filter, sort, archived items. A project contains one or more document versions and share links.
-- **Notifications:** actionable events with read/unread state once events exist. Until then, show an honest empty/coming-later state.
-- **Client Chat:** later project-linked conversations. External participants need scoped access and an identity model; do not ship an unauthenticated public inbox.
+## Author information architecture — revised founder brief
+The current structure is maintained in `devnotes.md` under “Product structure — founder revision”. It supersedes the first visual concept's navigation.
 
-Inside a project: title, save status, Preview and Share always occupy the same header positions. The toolbar exposes sections, client details and export. A scrollable canvas shows the entire deck with section labels. Selecting a section opens its relevant fields in the inspector. Reordering has drag and keyboard Move up/Move down. Preview hides editing controls and renders the same client artifact that publishing uses.
+- **Collapsible sidebar:** Project Folder; Brand Elements (Brand Bank); Template Builder; Analytics / Client Spreadsheet; Chat; Notifications; Profile. This is a grouping, not a release order.
+- **Top bar:** project name, save state, Preview and Share.
+- **Canvas:** directly editable presentation/proposal slides, Calculator and Forms tabs, AI Meeting Minutes, and a toolbox for text, shapes, images and interactive gizmos.
+- **Right bar:** properties, variables and tools for the selected object or gizmo. Direct canvas edits and inspector edits share one document model and undo history.
+
+Template Builder is now a distinct destination. Project Folder provides grid/list views. A dashboard can be reconsidered later; it is not required by the revised sidebar. The current HTML concept is a visual baseline, not an implementation of this revised feature set.
+
+Direct slide editing is a core requirement. Templates provide useful defaults and guardrails while users can edit supported slide objects directly. Variables make repeated changes efficient and must provide explicit global-versus-local override controls. See `OSIRIS-EDITOR-ARCHITECTURE.md` for the model and interaction rules.
 
 ## Primary journey and states
 1. New project → choose Presentation or Proposal → choose a Brand Bank template.
@@ -60,13 +63,13 @@ Suggested records: Workspace, User, Project, DocumentVersion, BrandTemplateVersi
 |---|---|---|
 | 0 · Preserve | Snapshot current renderer, export fixtures and draft schemas; map every existing feature | Old/new adapters produce the same client slides, calculations and export content |
 | 1 · Foundation | Typed domain, founder auth, Postgres projects, browser-draft import, revision-aware autosave and backup | Ryan and Izzat can reopen the same authorized project on another device; no lost updates; cross-account access rejected |
-| 2 · Author workspace MVP | Dashboard, Brand Bank selection, grid/list files, canvas, inspector, Preview and Share | Both founders complete a sales proposal without instructions; publish and reload recovery work |
+| 2 · Author workspace MVP | Project Folder, Brand Elements, grid/list files, directly editable canvas, inspector, Preview and Share | Both founders complete a sales proposal without instructions; publish and reload recovery work |
 | 3 · Brand Studio | Template versions, approved tokens, reusable sections, protected defaults | A template change does not alter previously published proposals |
 | 4 · Measurement | Project/link activity, view/click/download events, optional identified access | Counts distinguish visits, people and bots; no personal identity inferred from IP alone |
 | 5 · Collaboration | Invitations, roles, company folders, notifications and scoped client chat | Role matrix, invitation expiry, revoked access and message visibility pass tests |
 | 6 · Public website | Marketing site, product story and onboarding connected to the proven product | Claims match shipped features; registration policy is intentional |
 
-Notifications and Client Chat are included in the concept navigation but explicitly labelled later-phase features. Do not activate paid services or open registration simply to make these screens look populated.
+Notifications and Chat are included in the revised structure; the initial concept labels these later-phase features. Do not activate paid services or open registration simply to make these screens look populated.
 
 ## Analytics model
 Measure `publication_opened`, `slide_viewed`, `cta_clicked`, `pdf_download_requested` and calculator interactions at a useful, limited granularity. Treat download requested differently from a completed file save. Use publication/version IDs, deduplicate noisy repeats, avoid recording form answers, financial assumptions or message contents as analytics payloads. Anonymous sessions stay anonymous unless the visitor deliberately provides identity. Plan retention, consent and access controls before production collection. Founder/admin reporting comes first; user-facing reporting follows.
@@ -76,7 +79,7 @@ Black `#000000`, white `#FFFFFF`, cyan `#62DDEB`; charcoal surfaces `#141719`, b
 
 Typography: Inter for controls and body, with an Arial/system fallback; display headings use the same family to reduce font loading and keep the product calm. 14px controls, 16px comfortable body, 24/32px section and page headings. An 8px spacing rhythm with 4px subdivisions, 8px controls and 12px panels. Real outline icons always have labels on core navigation. Motion is functional and brief, disabled for reduced-motion preferences.
 
-The logo in the supplied Figma file remains authoritative. Because the connector quota prevented inspection, local concept assets use the existing app's ring mark as a provisional reference, not a replacement logo.
+Orange is reserved exclusively for the logo mark; do not add it to application UI accents. The exact shade and wordmark typography await inspection of the supplied master. The logo in the supplied Figma file remains authoritative. Because the connector quota prevented inspection, local concept assets use the existing app's ring mark as a provisional reference, not a replacement logo.
 
 ## Verification and rollout
 Maintain fixtures for single/multiple courses, multiple entities, unknown funding, legacy/enhanced modes, exact cohort split, lesson links, slide ordering, empty and long content. Test PDF/PPTX/XLSX output separately from browser rendering. Add route/access tests, publish failure injection, browser regression at desktop/tablet/mobile, keyboard-only editing and preview. Test at 200% zoom and with reduced motion.

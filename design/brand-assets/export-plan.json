@@ -1,0 +1,116 @@
+{
+  "status": "awaiting_approved_logo_source_and_figma_quota",
+  "source": {
+    "fileKey": "tGaka8JQGKbav3H4gkiqb0",
+    "pageId": "0:1",
+    "nodeIds": null,
+    "orangeHex": null,
+    "wordmarkTypeface": null
+  },
+  "rules": {
+    "orangeScope": "logo-mark-only",
+    "preserveAspectRatio": true,
+    "uiAccent": "#62DDEB"
+  },
+  "exports": [
+    {
+      "role": "full-logo-and-wordmark",
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "pngWidths": [
+        160,
+        240,
+        320,
+        480,
+        640,
+        960
+      ],
+      "height": "source-aspect-ratio"
+    },
+    {
+      "role": "mark",
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "squareSizes": [
+        24,
+        32,
+        48,
+        64,
+        128,
+        256,
+        512,
+        1024
+      ]
+    },
+    {
+      "role": "favicon",
+      "formats": [
+        "svg",
+        "png",
+        "ico"
+      ],
+      "squareSizes": [
+        16,
+        32,
+        48
+      ]
+    },
+    {
+      "role": "apple-touch",
+      "formats": [
+        "png"
+      ],
+      "squareSizes": [
+        180
+      ],
+      "background": "approved-opaque"
+    },
+    {
+      "role": "web-app",
+      "formats": [
+        "png"
+      ],
+      "squareSizes": [
+        192,
+        512
+      ]
+    },
+    {
+      "role": "web-app-maskable",
+      "formats": [
+        "png"
+      ],
+      "squareSizes": [
+        512
+      ],
+      "safeZone": "critical-artwork-within-centred-circle-radius-40-percent"
+    },
+    {
+      "role": "social-avatar",
+      "formats": [
+        "png"
+      ],
+      "squareSizes": [
+        400,
+        1080
+      ]
+    },
+    {
+      "role": "open-graph",
+      "formats": [
+        "png"
+      ],
+      "width": 1200,
+      "height": 630
+    }
+  ],
+  "destinations": {
+    "logo": "tGaka8JQGKbav3H4gkiqb0",
+    "ui": "Gj30CRCAhwca8oYVfOXQeV",
+    "brandBook": "9GYzO7XXDBoT5hDAAjt7FP"
+  }
+}

@@ -103,3 +103,59 @@ The fictional QA publication was deleted after testing; custom and Vercel routes
 
 ## 19 Nov 2026 — next-phase design package
 Prepared `docs/OSIRIS-REBUILD-PLAN.md` and `design/`: research-backed architecture, working scrolling author concept, ten-page SVG/HTML brand book, editable SVG overview and design tokens. Preview embeds the current client renderer with fictional, preview-only data. Desktop and 390px-wide responsive layouts reviewed; project search/grid/list, template selection, preview and concept share dialog exercised. All SVGs parse and concept JavaScript syntax passes. Figma UI metadata confirmed an empty page, then the Starter-plan MCP quota blocked further inspection/editing; no Figma changes made. The existing app mark is provisional until the supplied logo master can be inspected.
+
+
+## Product structure — founder revision, 19 November 2026
+
+This section is the current feature structure, not a priority list or delivery sequence. It supersedes the earlier sidebar names where they differ. Features described here are planning requirements, not claims that they are already deployed.
+
+### Sidebar — collapsible
+
+| Area | Responsibility |
+|---|---|
+| Project Folder | Create, open, organise, search and archive projects; grid/list views; each project contains presentation/proposal versions, assets and share links. |
+| Brand Elements (Brand Bank) | Approved logos, logo marks, wordmarks, colours, type and reusable brand assets. |
+| Template Builder | Create and edit reusable slide layouts, defaults, variables, sections and component constraints; version templates independently of projects. |
+| Analytics / Client Spreadsheet | Project/share-link engagement and a client table with client/company, contact, project, status and activity. Visitor identity must be explicit or remain anonymous. |
+| Chat | Project/client conversations with scoped access and notifications. |
+| Notifications | Relevant project, sharing and conversation events, with read/unread state. |
+| Profile | Account identity, workspace context and preferences; keep the two-founder access policy until explicitly expanded. |
+
+Collapsing the sidebar expands canvas space. Icon-only items retain accessible names and tooltips available on hover and keyboard focus. Remember this preference per user/device, keep the active destination apparent, and provide an explicit expand control. No hidden navigation on smaller screens.
+
+### Top bar
+
+- Project name, with rename and a clear save/sync state.
+- Preview and Share remain consistently available; Preview shows the client experience, and Share publishes a deliberate version.
+
+### Canvas space
+
+- Presentation / pitch-deck canvas opened from Project Folder; proposals and presentations both supported.
+- Calculator and Forms tabs for the project's interactive content, keeping their settings and client preview connected to the same document.
+- **AI Meeting Minutes is a core feature for the final public beta.** Adapt the local call-notes capability to an authenticated server-side AI API. Meeting minutes and suggested deck changes are separate reviewable outputs.
+- Toolbox for shapes, text, images and **Gizmos**: interactive pie charts, graphs, branch charts and other approved tools/widgets. Each gizmo needs an editable data model, preview behaviour and a defined static PDF/PPTX fallback.
+- Slides themselves are directly editable: select, edit text, replace/crop images, move/resize objects and update supported chart data on the canvas. Variables supplement this workflow; they are not the only way to change a slide.
+
+### Right bar
+
+- Context-sensitive editable fields, variables, object properties, tools and gizmo settings.
+- Canvas selection and inspector selection refer to the same object and state. Editing in either place updates the other and participates in the same undo/redo history.
+- Bound content distinguishes “change everywhere” from a per-slide override. Offer reset-to-variable and show which slides are affected before a global change.
+
+### Brand constraints and digital migration
+
+The approved source is [OSIRIS Logo](https://www.figma.com/design/tGaka8JQGKbav3H4gkiqb0/OSIRIS-Logo?node-id=0-1). **Orange is used only in the logo mark.** Black, white and cyan remain the application foundation; do not reuse logo orange for buttons, selection, charts or decorative accents. Preserve client-template branding independently. Exact orange, wordmark type, geometry and clear space must come from the supplied artwork, not guesses.
+
+See `design/brand-assets/README.md` and `export-plan.json` for the master/mark/wordmark/favicon and digital-size requirements. On this follow-up the Figma connector still returned its Starter-plan quota error. The new artwork has not been inspected or exported; the live favicon/logo and the supplied Figma files have not been changed for this request.
+
+### Existing AI feature and adaptation boundary
+
+Current source: `prototype/src/js/ui.js`, “Draft from call notes” block (`notesPrompt`, `cleanDraft`, `showDraft` and selective apply). It depends on `window.claude.use('sample')`, so it is hidden when that host capability is absent. It extracts priority, executive-summary text, pain points, practice scenarios, lesson applications and focus; it is not yet a complete meeting recorder/transcription service.
+
+Preserve review-before-apply, source-grounded suggestions, known-course/lesson validation, cancellation and manual entry. Add structured minutes (summary, decisions, action owner/due date where stated, open questions) plus proposed deck patches. An authenticated server adapter holds provider credentials; validate model output before showing it and recheck project revision before applying it. Never publish AI changes automatically. Keep notes private to the project, separate from shared-client payloads and engagement analytics.
+
+### Engineering notes
+
+See `docs/OSIRIS-EDITOR-ARCHITECTURE.md` for the proposed object model, direct editing/variable rules, command history, chart data, autosave and AI flow. Reviewed the founder-supplied `Ryanx-ai/toskerapp` and `Ryanx-ai/luna-vault` repositories. Applicable references and source commit links are recorded in the architecture document; no code or dependencies were copied. Adopt panel-state composition, acknowledgement-safe drafts, grouped notifications, immutable brand snapshots and explicit asset export targets where useful. Do not carry over maps/location logic or Luna’s session-local storage as production infrastructure.
+
+Founder timing: rebuild starts **20 November 2026 (Asia/Singapore)**. Today’s changes are planning and asset specifications only; no rebuild was started.

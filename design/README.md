@@ -33,3 +33,6 @@ Provisional logo: the current deployed app ring is shown only as an interim refe
 10. Phased roadmap
 
 Rebuild SVG pages with `python3 design/tools/generate-brand-book.py` from the repository root after updating assets/content. Do not deploy this folder as the production author app.
+
+## Revised founder brief
+The 19 November follow-up changes the sidebar and adds direct slide editing, gizmos and AI Meeting Minutes as core requirements. See `../devnotes.md` and `../docs/OSIRIS-EDITOR-ARCHITECTURE.md`. The HTML concept is the earlier visual baseline. Orange is reserved for the new logo mark; the artwork is still awaiting source access. `brand-assets/` contains the export specification, not completed new-logo assets. Rebuild starts 20 November 2026.
