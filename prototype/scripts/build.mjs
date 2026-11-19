@@ -12,7 +12,7 @@
  *
  * The builder is server-only; dist contains the public sign-in shell.
  */
-import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, copyFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -31,5 +31,6 @@ mkdirSync(join(ROOT, 'dist'), { recursive: true });
 mkdirSync(join(ROOT, '.private'), { recursive: true });
 writeFileSync(join(ROOT, '.private/builder.html'), html);
 writeFileSync(join(ROOT, 'dist/index.html'), renderDocument('src/login.html'));
+for (const asset of ['favicon.svg','favicon.ico','apple-touch-icon.png']) copyFileSync(join(ROOT,'assets',asset),join(ROOT,'dist',asset));
 const sha = createHash('sha256').update(html).digest('hex');
 console.log(`.private/builder.html  ${(Buffer.byteLength(html) / 1024 / 1024).toFixed(2)} MB  sha256 ${sha}  ${PUBLIC ? '(public: no client seeds)' : existsSync(SEEDS) ? '(local: with client seeds)' : '(no seeds file)'}`);

@@ -52,3 +52,6 @@ Preview now includes **Full screen**. Sharing refreshes authentication and retri
 
 ### Author workspace redesign
 The [rebuild plan](docs/OSIRIS-REBUILD-PLAN.md) includes research, stack choices and phased acceptance criteria. Review the [interactive author concept](design/index.html), [ten-page brand book](design/brand-book.html) and [handoff notes](design/README.md). These are next-phase design artifacts; production still uses the current author app. Figma population is pending connector quota availability.
+
+### Digital identity
+The founder-supplied logo is used in the login, builder and new-export favicon. [Brand kit](design/brand-assets/README.md) contains original SVG masters and 36 digital exports. Logo orange is confined to the mark; application design accents remain cyan. Figma placement is deferred until connector access returns.

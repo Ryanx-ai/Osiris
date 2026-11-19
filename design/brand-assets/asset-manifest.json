@@ -1,0 +1,189 @@
+{
+  "source": "Founder-supplied SVG exports, 19 November 2026",
+  "logoOrange": "#FF5100",
+  "logoCyan": "#00FFE1",
+  "logoWhite": "#FFFFFF",
+  "wordmark": "Original outlined paths; typeface unspecified",
+  "files": [
+    {
+      "file": "osiris-logo.svg",
+      "bytes": 7705,
+      "sha256": "7135fa159a66ea7df59171a35b2a75cf136c870d0b15b9f9230dd13c17561623"
+    },
+    {
+      "file": "osiris-mark.svg",
+      "bytes": 1014,
+      "sha256": "6cbb4c16dc3e6a6ee7b1f6fed327615711fa0727e9a36bad06f6cbd68712dc09"
+    },
+    {
+      "file": "osiris-wordmark.svg",
+      "bytes": 6784,
+      "sha256": "f31e6a134a81bbc77b9362b06de8724de0c34ac9c408a46acc907a55ae8d5ebd"
+    },
+    {
+      "file": "osiris-logo-160.png",
+      "bytes": 2743,
+      "sha256": "2144bc2a913e7d070487d6e40ea91f37f9b6919e921f3a72c5b6dc4d5af51c3e"
+    },
+    {
+      "file": "osiris-wordmark-160.png",
+      "bytes": 1736,
+      "sha256": "e97fd0c80b5c9d2f59e54272acaa5cefb7eea4e73e3aabd5cc028cbc733ccf63"
+    },
+    {
+      "file": "osiris-logo-240.png",
+      "bytes": 4181,
+      "sha256": "ee573d012e0fe3559e07a8ec17ade24654f847f1348e13a26db5e47f9961a41c"
+    },
+    {
+      "file": "osiris-wordmark-240.png",
+      "bytes": 2601,
+      "sha256": "fe0d6eec77a8a7dcee7d103207a484cea4bbee40e80e681b52170655e371fd93"
+    },
+    {
+      "file": "osiris-logo-320.png",
+      "bytes": 5816,
+      "sha256": "3770d35dd40dd04468fcc878523891e652f184a1f4502fd59364c23fb3e55bb3"
+    },
+    {
+      "file": "osiris-wordmark-320.png",
+      "bytes": 3531,
+      "sha256": "d5b441d3fb3053175a3a4a1326529e7b7d5de3cdaf0d1198b09fca83f6ee5ae4"
+    },
+    {
+      "file": "osiris-logo-480.png",
+      "bytes": 9240,
+      "sha256": "c14bf9a1fed92bc8311a97403190f8e980d7cbe6d73812e0a71f063626f45c62"
+    },
+    {
+      "file": "osiris-wordmark-480.png",
+      "bytes": 5276,
+      "sha256": "64d3d3c70da9c5c3c6576bb9722612a8583fbc26d1b6c1850821d9202bedd7d8"
+    },
+    {
+      "file": "osiris-logo-640.png",
+      "bytes": 12840,
+      "sha256": "577e8dc98bfa7a7a6989f449fb107dc38c692d68cf486648deae9010d1270641"
+    },
+    {
+      "file": "osiris-wordmark-640.png",
+      "bytes": 7663,
+      "sha256": "84a56c16d7795eef518471637951ee4fbf22ab86f21f005501e7d79470cf85df"
+    },
+    {
+      "file": "osiris-logo-960.png",
+      "bytes": 20493,
+      "sha256": "c023caedf50093ff63d068f7c49ab149cde6a4a759a333075f6571d312277a9d"
+    },
+    {
+      "file": "osiris-wordmark-960.png",
+      "bytes": 12439,
+      "sha256": "d9d086c810f90fd5dacde0ee9c43fc3237786407e523bb90d629bfdc20205928"
+    },
+    {
+      "file": "osiris-mark-24.png",
+      "bytes": 751,
+      "sha256": "01ac71a144cf09a75456e8afaec10a39950368f2a9dab7a08d3bf7c14718b4ee"
+    },
+    {
+      "file": "osiris-mark-32.png",
+      "bytes": 986,
+      "sha256": "8081af04b255a0060673cd4dffe96c6f4b697ff9ed77067a7a8ca341b4ba9fad"
+    },
+    {
+      "file": "osiris-mark-48.png",
+      "bytes": 1460,
+      "sha256": "e9d6a1ff8309d579fc5eafaf325fff19c4ee18720f90ac58ab1d336baf30ea74"
+    },
+    {
+      "file": "osiris-mark-64.png",
+      "bytes": 2054,
+      "sha256": "0d172b16ea5ee855eb53aed86e0a41cbabf9cc69b2c710d8c41f89e40df69255"
+    },
+    {
+      "file": "osiris-mark-128.png",
+      "bytes": 4052,
+      "sha256": "559cbd635e904e943e0cf534c55eb0671a293057c9ad3050c740fdeee7418a89"
+    },
+    {
+      "file": "osiris-mark-256.png",
+      "bytes": 8927,
+      "sha256": "f487c7ca4105ecb55ab467f7cf6bfcc21cbf5ce1b0ee1b00b711a3c09fe85435"
+    },
+    {
+      "file": "osiris-mark-512.png",
+      "bytes": 20884,
+      "sha256": "4261ee59fee97dbf04ef07720f566927aaf75aa09478a95a91cbbeea59c90d9e"
+    },
+    {
+      "file": "osiris-mark-1024.png",
+      "bytes": 46564,
+      "sha256": "ca799eaf7f82dd020ec767b172802b7d9042146329cd0eac2a1b793bdcb105a0"
+    },
+    {
+      "file": "favicon.svg",
+      "bytes": 1144,
+      "sha256": "7085c779eaebb01cc6da2defc036c93c10546358e8229cfda6c8971402115ba4"
+    },
+    {
+      "file": "favicon-16.png",
+      "bytes": 487,
+      "sha256": "3245db58754f7d25e06a7990af411dcac1d9613e504bb8ec57f4292eeab5fe16"
+    },
+    {
+      "file": "favicon-32.png",
+      "bytes": 1024,
+      "sha256": "8b303186111160b3c5c1be9e801c7c56991fd2abd60a75224d1621392eadd9c5"
+    },
+    {
+      "file": "favicon-48.png",
+      "bytes": 1546,
+      "sha256": "69bcb49e5c63a79894c9cdc836c13d7a2a8f154d0e0a54b5c67f039db4ac78ea"
+    },
+    {
+      "file": "favicon.ico",
+      "bytes": 3111,
+      "sha256": "d1047665532c9ab32b9b6e9a09e53f0285b79f4658f403445d5997885793cfa5"
+    },
+    {
+      "file": "apple-touch-icon.png",
+      "bytes": 6010,
+      "sha256": "0ef5fb12f7d7491a01dbcbc9fb0dbdcb265d7944d692be7fd2d512cb50483856"
+    },
+    {
+      "file": "icon-192.png",
+      "bytes": 6513,
+      "sha256": "0587b5f25b65908cc925896efabdea59b8263fec04b016fd68829fb5fecf751d"
+    },
+    {
+      "file": "icon-512.png",
+      "bytes": 22973,
+      "sha256": "b5ea738d4a687ec01bd64a9c19a404fee0b16d36deff0acdc4b75b2ac5f549fe"
+    },
+    {
+      "file": "icon-maskable-512.png",
+      "bytes": 18694,
+      "sha256": "9d44bb0464b2895edf5f27b6cbf4a7adf29f596056ed616535ce7523fda6a1e3"
+    },
+    {
+      "file": "social-avatar-400.png",
+      "bytes": 16674,
+      "sha256": "3b9c1e390c6d26b5d281e9a83eaedcb9138326f1afffae87d252907e39c048d9"
+    },
+    {
+      "file": "social-avatar-1080.png",
+      "bytes": 63154,
+      "sha256": "ea9c66250f6889b6d0c738ecd18786ea8aee5c1964ae51e1371b89125aeba5f2"
+    },
+    {
+      "file": "open-graph.svg",
+      "bytes": 7815,
+      "sha256": "106f11972eb3362b5f808eb9275d8685106eb9084400662181e8b9d2b23ea732"
+    },
+    {
+      "file": "open-graph.png",
+      "bytes": 38180,
+      "sha256": "70ebfbf18471f0d391c076d5e6d6a57f8eb654a62b9a5381ebdda593401a2fee"
+    }
+  ]
+}

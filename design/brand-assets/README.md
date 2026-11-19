@@ -1,12 +1,12 @@
 # OSIRIS digital identity export specification
 
-Status: **planned; source artwork unavailable through the exhausted Figma connector quota**. No new-logo exports have been generated. Existing ring artwork elsewhere in `design/` is provisional and must not be labelled the new logo.
+Status: **36 digital assets generated from the founder-supplied SVG exports on 19 November 2026.** `masters/osiris-logo.svg` is the original Group 1.svg; `masters/osiris-mark.svg` is Group 2.svg. `exports/` contains the delivery files; `asset-manifest.json` records their hashes. `osiris-digital-brand-kit.zip` bundles the source, exports and documentation. Figma placement remains deferred by the founder until connector access returns.
 
 Master: https://www.figma.com/design/tGaka8JQGKbav3H4gkiqb0/OSIRIS-Logo?node-id=0-1
 
-## Foundation frames to prepare in the logo file
+## Foundation frames prepared for later Figma placement
 
-Preserve the original master. Add a named Digital foundations section containing Full logo, Logo mark, Wordmark/type, Digital export targets and Usage. Keep editable original type where available; provide outlined SVG delivery copies so rendering does not depend on font installation. Record the actual typeface, weight/custom lettering, colour values, viewBox, bounds, source node IDs and export version. Do not substitute Inter for an unknown wordmark font.
+Preserve the original master. Add a named Digital foundations section containing Full logo, Logo mark, Wordmark/type, Digital export targets and Usage. Keep editable original type where available; provide outlined SVG delivery copies so rendering does not depend on font installation. The wordmark arrives as outlines: its original typeface is not identified, so preserve those paths rather than substituting Inter. Full logo viewBox: 0 0 1095 283; mark: 0 0 307 283. Exact colours: #FFFFFF, #00FFE1, #FF5100. Source Figma node IDs beyond the page remain unavailable.
 
 Orange belongs **only inside the approved logo mark**. The application remains black, white and cyan. The wordmark should retain its approved treatment; do not introduce orange typography, orange UI buttons or orange chart palettes as an OSIRIS brand accent. Client-template colours remain independent.
 
@@ -22,14 +22,14 @@ Orange belongs **only inside the approved logo mark**. The application remains b
 | Social avatar | 400×400 and 1080×1080 PNG | Check square and circular crops. |
 | Link preview | 1200×630 PNG | Composed card with full logo/wordmark; do not distort a logo to fill the card. |
 
-The machine-readable `export-plan.json` describes planned assets and Figma destinations. It is not a browser manifest and does not point at nonexistent deployed files. [MDN's manifest icon reference](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/icons) explains purpose, sizes and maskable use. Final clear space and minimum readable wordmark size must be measured against the actual logo.
+The machine-readable `export-plan.json` describes asset targets and Figma destinations. It is not a browser manifest and does not point at nonexistent deployed files. [MDN's manifest icon reference](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/icons) explains purpose, sizes and maskable use. Export padding is documented by the generator: favicon mark occupies 86% of width, touch/app/avatar 78%, and maskable 56% to keep the full rectangular mark inside the central safe circle. These are digital export treatments, not changes to source geometry. Use the outlined full logo on black; transparent exports need a dark background. The 16px icon preserves the silhouette, with fine accent separation necessarily reduced at that scale. No extra light-surface logo variant or speculative font file was invented.
 
 ## Site integration targets
 
 - `prototype/assets/favicon.svg`: current shared favicon source.
 - `prototype/src/index.html`, `prototype/src/login.html`, `prototype/src/js/ui.js`: current favicon embedding paths.
 - Login/header logo: use the approved full lockup or mark plus approved wordmark, with an accessible OSIRIS label.
-- `design/assets/osiris-mark.svg`, concept and brand-book artwork: refresh only after the new master is inspected.
+- `design/assets/osiris-mark.svg`, concept and brand-book artwork: refreshed from the supplied masters.
 - Preserve existing immutable published proposals; new exports receive the updated favicon. Do not rewrite client snapshots just to change branding.
 
 Verify SVG safety (no scripts/external references), actual PNG dimensions, ICO entries, transparency/backgrounds, edge clipping, light/dark contrast and 16px legibility. Then build, inspect login/builder/new recipient exports, and deploy the branding change.
@@ -40,4 +40,6 @@ Verify SVG safety (no scripts/external references), actual PNG dimensions, ICO e
 - UI file `Gj30CRCAhwca8oYVfOXQeV`: existing author concept as editable Design content with a vertical-scrolling viewport. Use the new master; the revised feature structure is documented for tomorrow's rebuild.
 - Slides file `9GYzO7XXDBoT5hDAAjt7FP`: existing ten-page brand book, updated logo and orange-only-mark rule. Reconcile the navigation page with the revised founder specification.
 
-No native Figma upload or site-logo replacement was completed on 19 November's follow-up because the logo source and file-editing connector remain inaccessible.
+The site branding and local concept/book use the supplied logo. No native Figma upload was attempted after the founder deferred that work.
+
+Regenerate: install `sharp@0.34.5` outside the app (for example `npm install --prefix /tmp/osiris-brand-tools sharp@0.34.5`), then run `OSIRIS_BRAND_TOOLS=/tmp/osiris-brand-tools node design/tools/export-brand-assets.mjs`. This is asset preparation only; Sharp is not a production app dependency.

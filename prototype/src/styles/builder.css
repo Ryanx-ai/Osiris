@@ -446,3 +446,8 @@ textarea.ta:hover{border-color:var(--line-hover)}
 #preview-modal.is-expanded .preview-modal,#preview-modal:fullscreen .preview-modal{width:100%;max-width:none;height:100%;max-height:none;border-radius:0;margin:0}
 #preview-status{font-size:12px;color:#52616b;margin-right:auto}
 @media(max-width:600px){.preview-modal{height:96dvh;padding:12px}.preview-modal .modal-acts{gap:8px;flex-wrap:wrap}.preview-modal .modal-head p{font-size:12px}}
+
+/* Approved OSIRIS lockup: preserve the white wordmark on a black surface. */
+.osiris-heading{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.osiris-lockup{display:inline-flex;background:#000;padding:12px 16px;border-radius:8px;max-width:100%}
+.osiris-lockup img{display:block;width:190px;max-width:100%;height:auto}

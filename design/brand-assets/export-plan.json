@@ -1,11 +1,16 @@
 {
-  "status": "awaiting_approved_logo_source_and_figma_quota",
+  "status": "generated_locally_figma_placement_deferred",
   "source": {
     "fileKey": "tGaka8JQGKbav3H4gkiqb0",
     "pageId": "0:1",
     "nodeIds": null,
-    "orangeHex": null,
-    "wordmarkTypeface": null
+    "orangeHex": "#FF5100",
+    "wordmarkTypeface": "Not supplied; original vector outlines retained",
+    "cyanHex": "#00FFE1",
+    "files": [
+      "masters/osiris-logo.svg",
+      "masters/osiris-mark.svg"
+    ]
   },
   "rules": {
     "orangeScope": "logo-mark-only",
