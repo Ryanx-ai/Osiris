@@ -20,6 +20,7 @@ Open the local server URL, or open `prototype/dist/index.html` directly after bu
 ## Deploy and share
 
 - Repository: [Ryanx-ai/Osiris](https://github.com/Ryanx-ai/Osiris), production branch `main`.
+- Live prototype: [osiris-pangea6.vercel.app](https://osiris-pangea6.vercel.app).
 - Vercel: project `osiris`, team `Pangea` (`pangea6`), Root Directory `prototype`.
 - Build: `node scripts/build.mjs --public`; output: `dist`; framework: Other; Node.js 22.
 - Domain: **osirisdeck.com**, purchased. Ryan will connect DNS separately. Keep the production `vercel.app` alias available alongside it.

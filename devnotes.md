@@ -6,7 +6,7 @@ Ryan's 19 November request is the current scope. Partner handoff documents descr
 
 - Imported partner commit `3fc3108` from the supplied Git bundle on top of existing `main`, preserving authorship and history. The plain prototype folder matched that commit before edits.
 - Preserved `prototype/src`, assets, embedded recipient apps and core renderer. Removed `concepts/` and stale artwork links. Added root housekeeping ignores.
-- Original transport files are archived locally in ignored `.handoff/`; the code itself is versioned in GitHub. The Desktop source is removed only after the push is verified.
+- Original transport files are archived locally in ignored `.handoff/`; the code itself is versioned in GitHub. All 60 source files were verified against the imported commit, transport archives were compared, and the Desktop source was deleted after the GitHub push was verified.
 - Public builds omit `seed-drafts.local.js` even if present. Build output is regenerated, including only deliberately published recipient HTML from the three-part publication tree.
 - Vercel project: `osiris`, team `pangea6`, ID `prj_JpLiZV1rOb68yu22ADgh7UkbbtKz`; GitHub `Ryanx-ai/Osiris`, `main`; root `prototype`; static output `dist`; Node 22.
 - Production aliases should be publicly usable. Preview and deployment-specific URLs retain Vercel protection. OSIRIS authentication is a separate future feature.
@@ -64,3 +64,13 @@ Company workspaces, invitations, owner/admin/editor/viewer roles, shared project
 ## Verification and release
 
 Run `cd prototype && npm test && npm run build:public`. Verify browser initialization and recipient HTML export, navigation, calculator and PDF output. Smoke-test the production alias without authentication and verify unpublished paths return 404. Record the final production URL, commit and any remaining checks below after deployment.
+
+### Release evidence — 19 November 2026
+
+- Live: https://osiris-pangea6.vercel.app (also https://osiris-ebon-kappa.vercel.app).
+- Initial application release: `6100ddb1b8853635c1a2c3c7a5371086a63a3e7e`, Vercel `dpl_GwUSVVt4dQPbvvpwrEMN1fkhdXoA`, production READY; build about 4.2 seconds. Subsequent documentation-only commits deploy through the same Git integration.
+- Unauthenticated production GET: 200; browser initialized with no JavaScript errors. Unknown three-part client path: 404. Verified `noindex`, `nosniff` and referrer-policy headers.
+- Two publication tests pass: three-part recipient path isolation, invalid-file/symlink rejection. Public build succeeded with zero client publications. Its builder SHA-256 remains `19efee1c0fe9c5826bfd0642a406cefe91478539315800a6e4b9ce2ca93da88d`, identical to the imported public builder.
+- Exported the built-in fictional example to a recipient microsite; verified Proposal, Calculator, Scoping, Enrol and Contact navigation. After dismissing the onboarding tour, the existing Download → PDF flow produced a 555 KB PDF without JavaScript errors. No real client records were published and no forms/messages were sent.
+- Browser smoke checks cover rendering, navigation and export, not the correctness of every funding rule or calculation. No server runtime exists in this static release; analytics/monitoring integration remains planned.
+- Remaining external setup: Ryan connects `osirisdeck.com` in Vercel Domains and applies the exact DNS records Vercel supplies at the registrar. Verify HTTPS and the same publication paths on both origins afterward. Domain routing has not been claimed as tested before DNS connection.

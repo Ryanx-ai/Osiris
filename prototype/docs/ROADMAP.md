@@ -26,8 +26,8 @@ Mapping from today's code: a **template** is what is hard-coded now (`content.js
 - [x] Dissect artifact into modules, byte-identical rebuild
 - [x] Strip client data from public builds
 - [x] Static deploy config for Vercel with noindex
-- [ ] Repo on GitHub, Vercel project connected for auto-deploys
-- [ ] Custom domain
+- [x] Repo on GitHub, Vercel project connected for auto-deploys
+- [ ] Custom domain: `osirisdeck.com` purchased; Ryan to connect later
 
 ## Phase 1: product foundation (partner: UI/UX)
 
