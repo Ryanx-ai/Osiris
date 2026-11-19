@@ -441,3 +441,8 @@ textarea.ta:hover{border-color:var(--line-hover)}
 /* Account and simple sharing controls */
 .account-bar{display:flex;justify-content:flex-end;align-items:center;gap:16px;font-size:12px;margin-bottom:16px;color:var(--muted,#59656e)}
 .share-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.preview-modal{width:min(1200px,96vw);max-width:1200px;height:92vh;display:flex;flex-direction:column}.preview-modal iframe{width:100%;flex:1;min-height:0;border:1px solid #d5dce0;border-radius:8px}.preview-modal .modal-head,.preview-modal .modal-acts{flex-shrink:0}#share-url{font-size:13px}#share-modal .modal{max-width:600px}
+/* Full-window preview also works when native fullscreen is unavailable. */
+#preview-modal.is-expanded,#preview-modal:fullscreen{padding:0;width:100%;height:100%;background:#f4f6f7}
+#preview-modal.is-expanded .preview-modal,#preview-modal:fullscreen .preview-modal{width:100%;max-width:none;height:100%;max-height:none;border-radius:0;margin:0}
+#preview-status{font-size:12px;color:#52616b;margin-right:auto}
+@media(max-width:600px){.preview-modal{height:96dvh;padding:12px}.preview-modal .modal-acts{gap:8px;flex-wrap:wrap}.preview-modal .modal-head p{font-size:12px}}

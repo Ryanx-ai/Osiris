@@ -16,9 +16,10 @@ async function loadEditor() {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Could not open the workspace.');
     if (window.Clerk.session?.id !== session.id) return;
-    window.OsirisAuth = {user:data.user, getToken:() => window.Clerk.session?.getToken(), signOut:() => window.Clerk.signOut()};
+    window.OsirisAuth = {user:data.user, getToken:options => window.Clerk.session?.getToken(options), signOut:() => window.Clerk.signOut()};
     const frame = document.createElement('iframe');
     frame.id = 'editor'; frame.title = 'OSIRIS proposal builder'; frame.srcdoc = data.html;
+    frame.setAttribute('allow', 'fullscreen *; clipboard-write *'); frame.allowFullscreen = true;
     document.getElementById('editor')?.remove(); document.body.append(frame);
     loadedSession = session.id; $('login').hidden = true;
   } catch (error) { message(error.message); $('sign-out').hidden = false; $('retry-editor').hidden = false; }

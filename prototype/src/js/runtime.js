@@ -444,9 +444,10 @@ const VI = (() => {
   function loadScript(url){
     return new Promise((resolve, reject) => {
       const s = document.createElement('script');
+      const timer = setTimeout(() => { s.remove(); reject(new Error('timeout')); }, 12000);
       s.src = url; s.async = true; s.crossOrigin = 'anonymous';
-      s.onload = () => resolve();
-      s.onerror = () => { s.remove(); reject(new Error('load')); };
+      s.onload = () => { clearTimeout(timer); resolve(); };
+      s.onerror = () => { clearTimeout(timer); s.remove(); reject(new Error('load')); };
       document.head.appendChild(s);
     });
   }

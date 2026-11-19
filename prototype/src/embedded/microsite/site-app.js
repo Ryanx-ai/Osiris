@@ -131,7 +131,7 @@ async function copyText(text, okMsg){
 /* ---------- frames: the deck and the calculator are whole pages of their own, built here from the parts this file carries ---------- */
 const SC = '<' + '/script>';
 const inline = s => '<script>' + s + SC;
-const DECK_BRIDGE = 'window.addEventListener("message",function(e){var m=e.data;if(!m||m.viSite!==1||e.source!==window.parent)return;if(m.type==="deck-download"){var b=document.getElementById("b-dl");if(b)b.click();}});';
+const DECK_BRIDGE = 'window.addEventListener("message",function(e){var m=e.data;if(!m||m.viSite!==1||e.source!==window.parent)return;if(m.type==="deck-download"){var b=document.getElementById("b-dl");if(b){b.click();var p=document.querySelector("[data-x=pdf]");if(p)p.click();}}});';
 function deckDoc(){
   return ['<!doctype html>', '<html lang="en">', '<head>', '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">',
@@ -160,7 +160,7 @@ let calcFrame = null, deckFrame = null;
 function mountFrame(tab, title, doc){
   const f = document.createElement('iframe');
   f.title = title;
-  f.setAttribute('allow', 'fullscreen; clipboard-write');
+  f.setAttribute('allow', 'fullscreen *; clipboard-write *');
   f.setAttribute('allowfullscreen', '');
   f.srcdoc = doc;
   $('p-' + tab).appendChild(f);
@@ -204,14 +204,16 @@ async function send(payload){
   const timer = ctl ? setTimeout(() => ctl.abort(), 20000) : 0;
   try {
     await fetch(CFG.hook, {method: 'POST', mode: 'no-cors', redirect: 'follow', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify(payload), signal: ctl ? ctl.signal : undefined});
-    return 'sent';
+    // An opaque no-cors response cannot confirm that Apps Script stored the answer.
+    return 'unconfirmed';
   } catch (e) { return 'failed'; }
   finally { clearTimeout(timer); }
 }
 const baseInfo = type => ({type, v: 1, sent: new Date().toISOString(), siteId: CFG.id, client: CFG.client || '', proposal: CFG.title || '', consultant: ME.name || ''});
 function doneHTML(kind, res, sentHead){
   const good = res === 'sent' || res === 'preview';
-  const head = res === 'sent' ? (sentHead || ['Sent to ' + esc(FIRST), 'Keep a copy below in case you need it.'])
+  const head = res === 'unconfirmed' ? ['Response sent for processing', 'This browser cannot confirm delivery to the Google Sheet. Keep your copy below, or send it directly to your consultant.']
+    : res === 'sent' ? (sentHead || ['Sent to ' + esc(FIRST), 'Keep a copy below in case you need it.'])
     : res === 'preview' ? ['This is where a participant sees “Thank you”', 'Preview only: nothing was sent. In the published page each response goes to your Google Sheet' + (CFG.hook ? '.' : ' once you add the link; without one, the participant sends it by email or WhatsApp.')]
     : res === 'failed' ? ['It couldn’t be sent automatically', 'Your network may block it. Nothing is lost: send it with one of the buttons below.']
     : ['One more step: send it to ' + esc(FIRST), 'Choose how to send it. Your answers are filled in already.'];

@@ -1644,11 +1644,42 @@ function previewHostedWebDeck(){
   $('preview-frame').srcdoc = buildSiteHtml(deckState(), 'player', {preview:true});
   $('preview-modal').hidden = false; $('preview-close').focus();
 }
-function closePreview(){ $('preview-modal').hidden = true; $('preview-frame').srcdoc = ''; $('preview-web').focus(); }
+function previewExpanded(){ return !!(document.fullscreenElement || document.webkitFullscreenElement || $('preview-modal').classList.contains('is-expanded')); }
+function syncPreviewSize(){
+  const expanded = previewExpanded();
+  $('preview-fullscreen').textContent = expanded ? 'Exit full screen' : 'Full screen';
+  $('preview-fullscreen').setAttribute('aria-pressed', String(expanded));
+}
+async function exitPreviewSize(){
+  $('preview-modal').classList.remove('is-expanded');
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    try { await (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch {}
+  }
+  $('preview-status').textContent = ''; syncPreviewSize();
+}
+async function closePreview(){
+  await exitPreviewSize();
+  $('preview-modal').hidden = true; $('preview-frame').srcdoc = ''; $('preview-web').focus();
+}
+$('preview-fullscreen').addEventListener('click', async () => {
+  if (previewExpanded()) { await exitPreviewSize(); return; }
+  const modal = $('preview-modal');
+  // A viewport fallback keeps this usable on mobile and when browser fullscreen is denied.
+  modal.classList.add('is-expanded'); syncPreviewSize();
+  const request = modal.requestFullscreen || modal.webkitRequestFullscreen;
+  try {
+    if (!request) throw new Error('unsupported');
+    await request.call(modal);
+  } catch { $('preview-status').textContent = 'Expanded to fill this window. Use Exit full screen to return.'; }
+});
+['fullscreenchange', 'webkitfullscreenchange'].forEach(type => document.addEventListener(type, () => {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) $('preview-modal').classList.remove('is-expanded');
+  syncPreviewSize();
+}));
 $('share-deck').addEventListener('click', () => { if (needClient()) gate(openShareModal); });
 $('preview-web').addEventListener('click', () => { if (needClient()) previewHostedWebDeck(); });
 $('preview-close').addEventListener('click', closePreview);
-$('preview-share').addEventListener('click', () => { closePreview(); gate(openShareModal); });
+$('preview-share').addEventListener('click', async () => { await closePreview(); gate(openShareModal); });
 $('share-close').addEventListener('click', closeShareModal);
 $('share-modal').addEventListener('click', e => { if (e.target === $('share-modal')) closeShareModal(); });
 $('share-publish').addEventListener('click', async () => {
@@ -1658,11 +1689,7 @@ $('share-publish').addEventListener('click', async () => {
   shareBusy = true; $('share-publish').disabled = true; $('share-close').disabled = true; $('share-slug').disabled = true;
   shareStatus('Publishing your proposal…');
   try {
-    const token = await AUTH?.getToken();
-    if (!token) throw new Error('Sign in again before sharing.');
-    const response = await fetch('/api/publish', {method:'POST', headers:{'Content-Type':'application/json', Authorization:'Bearer ' + token}, body:JSON.stringify({slug, html:shareHtml})});
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'Could not publish. Please try again.');
+    const result = await window.OsirisPublish(AUTH, {slug, html:shareHtml}, shareStatus);
     $('share-url').value = result.url; $('share-open').href = result.url;
     $('share-result').hidden = false; $('share-publish').hidden = true;
     shareStatus('Your link is ready. Anyone with this link can view this published version.'); $('share-copy').focus();
@@ -1700,7 +1727,7 @@ document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if (!$('gate-modal').hidden) closeGate();
   else if (!$('share-modal').hidden) closeShareModal();
-  else if (!$('preview-modal').hidden) closePreview();
+  else if (!$('preview-modal').hidden) { if (previewExpanded()) exitPreviewSize(); else closePreview(); }
   else if (!$('notes-modal').hidden) closeNotes();
   else if (!$('xfer-modal').hidden) closeXfer();
   else if (!$('pp-modal').hidden) $('pp-modal').hidden = true;

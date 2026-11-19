@@ -46,3 +46,6 @@ Clerk supplies `CLERK_SECRET_KEY` and `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` throug
 Cloud draft/project storage; Google sign-in; admin and user-facing analytics; OSIRIS brand, website and UX; Brand Studio templates; Deck Builder variables for presentations and proposals. Company workspaces and collaborators follow personal MVP validation.
 
 See [developer notes](devnotes.md), [development plan](devplan.md), and [prototype guide](prototype/README.md). Partner handoff documents are historical implementation context; current user requests determine scope.
+
+### Reliability update
+Preview now includes **Full screen**. Sharing refreshes authentication and retries temporary failures without reloading your draft. Existing shared URLs retain their published version. See [release checks](docs/RELEASE-AUDIT-2026-11-19.md).
